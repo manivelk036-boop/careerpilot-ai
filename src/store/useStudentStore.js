@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { getLevelInfo, levels } from '../data/students';
 import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'https://careerpilot-ai-production-6050.up.railway.app/api';
 
 const initialStudent = {
   id: null,
