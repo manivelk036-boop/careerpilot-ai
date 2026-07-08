@@ -13,6 +13,7 @@ export const companies = [
     description: 'India\'s largest IT company with global presence and diverse opportunities.',
     difficulty: 'Medium',
     color: 'from-blue-600 to-blue-800',
+    careersUrl: 'https://www.tcs.com/careers',
   },
   {
     id: 'infosys',
@@ -28,6 +29,7 @@ export const companies = [
     description: 'Global technology consulting leader with strong training programs.',
     difficulty: 'Medium',
     color: 'from-purple-600 to-purple-800',
+    careersUrl: 'https://www.infosys.com/careers/',
   },
   {
     id: 'wipro',
@@ -43,6 +45,7 @@ export const companies = [
     description: 'Leading global IT, consulting and business process services company.',
     difficulty: 'Easy-Medium',
     color: 'from-yellow-500 to-orange-600',
+    careersUrl: 'https://careers.wipro.com/',
   },
   {
     id: 'hcl',
@@ -58,6 +61,7 @@ export const companies = [
     description: 'Technology company offering IT and tech-enabled services.',
     difficulty: 'Easy-Medium',
     color: 'from-red-500 to-red-700',
+    careersUrl: 'https://www.hcltech.com/careers',
   },
   {
     id: 'cognizant',
@@ -73,6 +77,7 @@ export const companies = [
     description: 'Global professional services company transforming business through technology.',
     difficulty: 'Medium',
     color: 'from-blue-500 to-cyan-600',
+    careersUrl: 'https://careers.cognizant.com/',
   },
   {
     id: 'zoho',
@@ -88,6 +93,7 @@ export const companies = [
     description: 'Leading product company with 55+ software applications.',
     difficulty: 'Hard',
     color: 'from-green-500 to-emerald-600',
+    careersUrl: 'https://www.zoho.com/careers.html',
   },
   {
     id: 'freshworks',
@@ -103,6 +109,7 @@ export const companies = [
     description: 'Customer experience platform serving 60,000+ businesses worldwide.',
     difficulty: 'Hard',
     color: 'from-lime-500 to-green-600',
+    careersUrl: 'https://www.freshworks.com/company/careers/',
   },
   {
     id: 'amazon',
@@ -118,6 +125,7 @@ export const companies = [
     description: 'World\'s largest cloud provider and e-commerce giant.',
     difficulty: 'Very Hard',
     color: 'from-orange-400 to-amber-500',
+    careersUrl: 'https://www.amazon.jobs/',
   },
   {
     id: 'microsoft',
@@ -133,6 +141,7 @@ export const companies = [
     description: 'Global technology company known for Windows, Azure, and productivity tools.',
     difficulty: 'Very Hard',
     color: 'from-blue-400 to-blue-600',
+    careersUrl: 'https://careers.microsoft.com/',
   },
   {
     id: 'razorpay',
@@ -148,6 +157,7 @@ export const companies = [
     description: 'India\'s leading payment solutions platform.',
     difficulty: 'Hard',
     color: 'from-cyan-500 to-blue-600',
+    careersUrl: 'https://razorpay.com/jobs/',
   },
   {
     id: 'swiggy',
@@ -163,6 +173,7 @@ export const companies = [
     description: 'India\'s leading food delivery platform.',
     difficulty: 'Hard',
     color: 'from-orange-500 to-red-500',
+    careersUrl: 'https://careers.swiggy.com/',
   },
   {
     id: 'deloitte',
@@ -178,6 +189,7 @@ export const companies = [
     description: 'Big Four professional services network.',
     difficulty: 'Medium-Hard',
     color: 'from-green-600 to-teal-700',
+    careersUrl: 'https://www2.deloitte.com/in/en/careers.html',
   },
 ];
 

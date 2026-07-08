@@ -8,6 +8,28 @@ import toast from 'react-hot-toast';
 import CelebrationModal from '../components/CelebrationModal';
 import { getLevelInfo } from '../data/students';
 
+// Helper to shuffle arrays
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Shuffles the options of a question and updates the correct index
+function shuffleQuestion(q) {
+  const originalCorrectOption = q.options[q.correct];
+  const shuffledOptions = shuffleArray(q.options);
+  const newCorrectIndex = shuffledOptions.indexOf(originalCorrectOption);
+  return {
+    ...q,
+    options: shuffledOptions,
+    correct: newCorrectIndex
+  };
+}
+
 function QuizCard({ quiz, onStart }) {
   return (
     <motion.div whileHover={{ y: -3 }} className="glass-hover p-5 cursor-pointer" onClick={() => onStart(quiz)}>
@@ -41,7 +63,7 @@ export default function Quiz() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
-  const [celebration, setCelebration] = useState(null); // { score, xp, coins, leveledUp, oldLevel, newLevel }
+  const [celebration, setCelebration] = useState(null);
   const { saveQuizScore, quizScores, careerGoal, xp } = useStudentStore();
   const timerRef = useRef(null);
 
@@ -67,15 +89,26 @@ export default function Quiz() {
   }, [activeQuiz, qIndex, showResult]);
 
   const startQuiz = (quiz) => {
-    const data = quizData[quiz.id];
-    if (!data) return;
-    setActiveQuiz({ ...quiz, data });
+    const rawData = quizData[quiz.id];
+    if (!rawData) return;
+    
+    // Shuffle questions and select first 5, then shuffle options for each selected question
+    const shuffledQuestions = shuffleArray(rawData.questions)
+      .slice(0, Math.min(5, rawData.questions.length))
+      .map(shuffleQuestion);
+
+    const randomizedData = {
+      ...rawData,
+      questions: shuffledQuestions
+    };
+
+    setActiveQuiz({ ...quiz, data: randomizedData });
     setQIndex(0);
     setAnswers([]);
     setSelected(null);
     setShowResult(false);
     setShowExplanation(false);
-    setTimeLeft(data.timeLimit || 600);
+    setTimeLeft(randomizedData.timeLimit || 600);
   };
 
   const handleAnswer = (optionIdx) => {
@@ -109,7 +142,6 @@ export default function Quiz() {
     const xpEarned = score >= 70 ? activeQuiz.data.xp : Math.round(activeQuiz.data.xp * 0.3);
     const coinsEarned = score >= 70 ? activeQuiz.data.coins : Math.round(activeQuiz.data.coins * 0.3);
 
-    // Detect level-up
     const currentXP = useStudentStore.getState().xp;
     const oldLevel = getLevelInfo(currentXP);
     saveQuizScore(activeQuiz.id, score, xpEarned, coinsEarned);
@@ -175,7 +207,6 @@ export default function Quiz() {
     return (
       <Layout title={activeQuiz.title}>
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Header */}
           <div className="glass p-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-white">{activeQuiz.title}</span>
@@ -191,7 +222,6 @@ export default function Quiz() {
             <p className="text-xs text-slate-500 mt-1.5">Question {qIndex + 1} of {activeQuiz.data.questions.length}</p>
           </div>
 
-          {/* Question */}
           <AnimatePresence mode="wait">
             <motion.div key={qIndex} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="glass p-6">
               <p className="text-white font-medium mb-6 leading-relaxed whitespace-pre-line">{q.question}</p>

@@ -269,6 +269,20 @@ export const useStudentStore = create(
         };
       }),
 
+      applyToCompany: (companyId) => {
+        set(state => {
+          const currentApplied = state.roadmapProgress?.applied || [];
+          if (currentApplied.includes(companyId)) return {};
+          
+          return {
+            roadmapProgress: {
+              ...state.roadmapProgress,
+              applied: [...currentApplied, companyId]
+            }
+          };
+        });
+      },
+
       resetProgress: () => set(initialStudent),
     }),
     {

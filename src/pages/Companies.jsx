@@ -3,8 +3,17 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useStudentStore } from '../store/useStudentStore';
 import { companies } from '../data/companies';
-import { careerPaths } from '../data/careers';
-import { Building2, TrendingUp, CheckCircle2, AlertCircle, ExternalLink, Filter } from 'lucide-react';
+import { Building2, TrendingUp, CheckCircle2, AlertCircle, ExternalLink, Filter, Send, Award, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+const typeColors = {
+  Service: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6', border: 'rgba(59,130,246,0.3)' },
+  Product: { bg: 'rgba(139,92,246,0.1)', text: '#8B5CF6', border: 'rgba(139,92,246,0.3)' },
+  FAANG: { bg: 'rgba(245,158,11,0.1)', text: '#F59E0B', border: 'rgba(245,158,11,0.3)' },
+  Startup: { bg: 'rgba(16,185,129,0.1)', text: '#10B981', border: 'rgba(16,185,129,0.3)' },
+  Consulting: { bg: 'rgba(236,72,153,0.1)', text: '#EC4899', border: 'rgba(236,72,153,0.3)' },
+};
 
 function getMatchScore(student, company) {
   let score = 70;
@@ -16,18 +25,32 @@ function getMatchScore(student, company) {
   return Math.min(99, Math.max(40, score));
 }
 
-const typeColors = {
-  Service: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6', border: 'rgba(59,130,246,0.3)' },
-  Product: { bg: 'rgba(139,92,246,0.1)', text: '#8B5CF6', border: 'rgba(139,92,246,0.3)' },
-  FAANG: { bg: 'rgba(245,158,11,0.1)', text: '#F59E0B', border: 'rgba(245,158,11,0.3)' },
-  Startup: { bg: 'rgba(16,185,129,0.1)', text: '#10B981', border: 'rgba(16,185,129,0.3)' },
-  Consulting: { bg: 'rgba(236,72,153,0.1)', text: '#EC4899', border: 'rgba(236,72,153,0.3)' },
-};
-
 export default function Companies() {
   const student = useStudentStore();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('All');
   const [sortBy, setSortBy] = useState('match');
+
+  const appliedList = student.roadmapProgress?.applied || [];
+
+  const handleApply = (company) => {
+    if (appliedList.includes(company.id)) {
+      toast('You have already applied to this company!', { icon: '💼' });
+      return;
+    }
+    
+    // Open official careers link in new tab
+    window.open(company.careersUrl || 'https://www.google.com', '_blank');
+    
+    // Add to applied list in Zustand store
+    student.applyToCompany(company.id);
+    toast.success(`Redirected to ${company.name}'s official careers portal. Status: Applied!`);
+  };
+
+  const handleImproveScore = () => {
+    navigate('/roadmap');
+    toast('Complete learning topics and pass quizzes to increase your Placement Score!', { icon: '💡' });
+  };
 
   const types = ['All', 'Service', 'Product', 'FAANG', 'Startup', 'Consulting'];
 
@@ -49,10 +72,10 @@ export default function Companies() {
         {/* Header Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Companies Analyzed', value: companies.length, icon: '🏢', color: '#3B82F6' },
-            { label: 'Eligible Companies', value: eligible, icon: '✅', color: '#10B981' },
-            { label: 'Your Score', value: `${student.placementScore}/100`, icon: '🎯', color: '#8B5CF6' },
-            { label: 'CGPA', value: student.cgpa, icon: '🎓', color: '#F59E0B' },
+            { label: 'Companies Match', value: companies.length, icon: '🏢', color: '#3B82F6' },
+            { label: 'Eligible Matches', value: eligible, icon: '✅', color: '#10B981' },
+            { label: 'Applications Sent', value: appliedList.length, icon: '📩', color: '#8B5CF6' },
+            { label: 'Your CGPA', value: student.cgpa, icon: '🎓', color: '#F59E0B' },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
               className="glass p-4">
@@ -64,6 +87,39 @@ export default function Companies() {
             </motion.div>
           ))}
         </div>
+
+        {/* Applications Tracker (if applied to any) */}
+        {appliedList.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="glass p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-display font-bold text-white text-base">📩 Job Applications Tracker</h3>
+              <span className="text-xs text-slate-500">Track and manage your placement targets</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {appliedList.map(cid => {
+                const comp = companies.find(c => c.id === cid);
+                if (!comp) return null;
+                return (
+                  <div key={cid} className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{comp.logo}</span>
+                      <div>
+                        <p className="text-sm font-semibold text-white">{comp.name}</p>
+                        <p className="text-xs text-slate-500">{comp.type} · {comp.package}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                        <Clock size={10} /> In Review
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
         {/* Filter Bar */}
         <div className="glass p-4 flex flex-wrap items-center gap-3">
@@ -98,6 +154,7 @@ export default function Companies() {
           {filtered.map((company, i) => {
             const typeStyle = typeColors[company.type] || typeColors.Service;
             const isEligible = company.matchScore >= 70;
+            const isApplied = appliedList.includes(company.id);
             const gapSkills = company.skills.filter(s => !student.skills.some(ss => ss.toLowerCase().includes(s.toLowerCase())));
 
             return (
@@ -108,7 +165,6 @@ export default function Companies() {
                 transition={{ delay: i * 0.04 }}
                 className="company-card"
               >
-                {/* Top gradient bar */}
                 <div className={`h-1.5 bg-gradient-to-r ${company.color}`} />
 
                 <div className="p-5">
@@ -172,19 +228,6 @@ export default function Companies() {
                     </div>
                   </div>
 
-                  {/* Rounds */}
-                  <div className="mb-4">
-                    <p className="text-xs text-slate-500 mb-2">Interview Rounds</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {company.rounds.map((r, i) => (
-                        <span key={i} className="text-xs px-2 py-0.5 rounded-md text-slate-400"
-                          style={{ background: 'rgba(255,255,255,0.05)' }}>
-                          {i + 1}. {r}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Skill Gap */}
                   {gapSkills.length > 0 && (
                     <div className="mb-4 p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)' }}>
@@ -197,9 +240,28 @@ export default function Companies() {
                     </div>
                   )}
 
-                  <button className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${isEligible ? 'btn-primary' : 'btn-secondary'}`}>
-                    {isEligible ? <><ExternalLink size={14} /> Apply Now</> : <><TrendingUp size={14} /> Improve Score</>}
-                  </button>
+                  {/* Action Button */}
+                  {isEligible ? (
+                    <button
+                      onClick={() => handleApply(company)}
+                      className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                        isApplied ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'btn-primary'
+                      }`}
+                    >
+                      {isApplied ? (
+                        <><CheckCircle2 size={14} /> Applied ✓</>
+                      ) : (
+                        <><ExternalLink size={14} /> Apply Now</>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleImproveScore}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all btn-secondary"
+                    >
+                      <TrendingUp size={14} /> Improve Score
+                    </button>
+                  )}
                 </div>
               </motion.div>
             );

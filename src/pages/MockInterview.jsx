@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '../components/Layout';
 import { useStudentStore } from '../store/useStudentStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Mic, Square, ChevronRight, Sparkles, Brain, BarChart3,
-  Target, MessageSquare, Clock, RefreshCw, Trophy
+  Mic, Square, ChevronRight, Sparkles, Brain, Video as VideoIcon,
+  Target, MessageSquare, Clock, RefreshCw, Trophy, Download, Play, AlertCircle
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -119,11 +119,9 @@ const interviewRoles = [
   },
 ];
 
-/* Scoring logic based on answer length + keyword presence */
-const scoreAnswer = (answer, role, qIdx) => {
+const scoreAnswer = (answer, role) => {
   const wordCount = answer.trim().split(/\s+/).length;
   let base = Math.min(90, 50 + wordCount * 0.8);
-  // Bonus for technical keywords
   const keywords = {
     se: ['complexity', 'oop', 'rest', 'sql', 'nosql', 'object', 'algorithm', 'http', 'api'],
     da: ['join', 'sql', 'outlier', 'correlation', 'pivot', 'mean', 'median', 'distribution'],
@@ -137,16 +135,13 @@ const scoreAnswer = (answer, role, qIdx) => {
   return Math.round(base);
 };
 
-const generateFeedback = (answer, score, role, qIdx) => {
+const generateFeedback = (answer, score, role) => {
   if (score >= 85) return 'Excellent answer — strong structure, clear technical terminology, and good depth.';
   if (score >= 70) return 'Good answer. Covered the core concepts well. Could add a real-world example to strengthen it.';
   if (score >= 55) return 'Decent answer. Try to use more specific terminology and structure your response with a clear beginning, middle, and conclusion.';
   return 'Answer was too brief. Practice the STAR method: Situation, Task, Action, Result for behavioral questions.';
 };
 
-/* ─────────────────────────────────────────────────────────────
-   Component
-   ───────────────────────────────────────────────────────────── */
 export default function MockInterview() {
   const [selectedRole, setSelectedRole] = useState(null);
   const [qIndex, setQIndex] = useState(0);
@@ -157,9 +152,15 @@ export default function MockInterview() {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
 
+  // Video recording states and refs
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const streamRef = useRef(null);
+  const chunksRef = useRef([]);
+  const [videoBlobUrl, setVideoBlobUrl] = useState(null);
+
   const { completeMockInterview, mockInterviewsDone, careerGoal } = useStudentStore();
 
-  // Auto-select role based on career goal
   const suggestedRoleId = (() => {
     if (careerGoal === 'java-developer' || careerGoal === 'python-developer' || careerGoal === 'full-stack') return 'se';
     if (careerGoal === 'data-analyst' || careerGoal === 'ai-engineer') return 'da';
@@ -185,30 +186,88 @@ export default function MockInterview() {
     setResponseText('');
     setIsRecording(false);
     setResult(null);
+    setVideoBlobUrl(null);
+    chunksRef.current = [];
+  };
+
+  // Start webcam and recording
+  const startMediaRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      
+      const options = { mimeType: 'video/webm;codecs=vp9,opus' };
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, options);
+      } catch (e) {
+        recorder = new MediaRecorder(stream);
+      }
+
+      mediaRecorderRef.current = recorder;
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        setVideoBlobUrl(url);
+      };
+
+      recorder.start(1000); // chunk every 1 sec
+      setIsRecording(true);
+      setResponseText('');
+    } catch (err) {
+      console.error('Webcam/Mic access error:', err);
+      toast.error('Failed to access camera or microphone. Please check permissions.');
+    }
+  };
+
+  // Stop recording and stream
+  const stopMediaRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
+    setIsRecording(false);
   };
 
   const toggleRecording = () => {
     if (isRecording) {
+      stopMediaRecording();
+      // Inject dummy answer if empty
       if (!responseText.trim()) {
         const role = interviewRoles.find(r => r.id === selectedRole);
-        setResponseText(role.dummyAnswers[qIndex] || 'I would approach this methodically, analyzing the problem, identifying key requirements, and designing a solution based on industry best practices.');
+        setResponseText(role.dummyAnswers[qIndex] || 'I would approach this methodically.');
       }
-      setIsRecording(false);
     } else {
-      setIsRecording(true);
-      setResponseText('');
+      startMediaRecording();
     }
   };
 
   const handleNext = () => {
+    // Stop recording if active before moving to next
+    if (isRecording) {
+      stopMediaRecording();
+    }
+
     const roleObj = interviewRoles.find(r => r.id === selectedRole);
     const newAnswers = [...answers, {
       question: roleObj.questions[qIndex],
-      answer: responseText,
+      answer: responseText || 'No answer provided.',
     }];
     setAnswers(newAnswers);
     setResponseText('');
-    setIsRecording(false);
 
     if (qIndex + 1 < roleObj.questions.length) {
       setQIndex(qIndex + 1);
@@ -218,16 +277,17 @@ export default function MockInterview() {
   };
 
   const handleSubmit = async (finalAns, roleObj) => {
+    stopMediaRecording();
     setAnalyzing(true);
-    await new Promise(r => setTimeout(r, 3000));
+    await new Promise(r => setTimeout(r, 2500));
 
     const feedback = finalAns.map((a, idx) => {
-      const score = scoreAnswer(a.answer, selectedRole, idx);
+      const score = scoreAnswer(a.answer, selectedRole);
       return {
         q: a.question,
         answer: a.answer,
         score,
-        review: generateFeedback(a.answer, score, selectedRole, idx),
+        review: generateFeedback(a.answer, score, selectedRole),
       };
     });
 
@@ -237,6 +297,15 @@ export default function MockInterview() {
     setAnalyzing(false);
     toast.success(`Interview complete! +150 XP +75 🪙`, { icon: '🎤' });
   };
+
+  // Clean up streams on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   const formatSecs = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 
@@ -250,17 +319,36 @@ export default function MockInterview() {
     return (
       <Layout title="AI Interview Feedback">
         <div className="max-w-3xl mx-auto space-y-6">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass p-8 text-center">
-            <div className="text-5xl mb-4">🤖</div>
-            <h2 className="font-display font-bold text-2xl text-white mb-1">AI Interview Report</h2>
-            <p className="text-slate-500 text-sm mb-6">{result.roleTitle} Interview · {result.feedback.length} Questions</p>
-            <div className="text-7xl font-display font-bold mb-2" style={{ color: grade.color }}>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass p-8 text-center space-y-6">
+            <div className="text-5xl">🤖</div>
+            <div>
+              <h2 className="font-display font-bold text-2xl text-white mb-1">AI Interview Report</h2>
+              <p className="text-slate-500 text-sm">{result.roleTitle} Interview · {result.feedback.length} Questions</p>
+            </div>
+            
+            <div className="text-7xl font-display font-bold" style={{ color: grade.color }}>
               {result.score}<span className="text-3xl text-slate-500">/100</span>
             </div>
-            <span className="inline-block px-4 py-1 rounded-full text-sm font-semibold" style={{ background: `${grade.color}20`, color: grade.color }}>
-              {grade.label}
-            </span>
-            <p className="text-sm text-slate-400 max-w-md mx-auto mt-4">
+            <div>
+              <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold" style={{ background: `${grade.color}20`, color: grade.color }}>
+                {grade.label}
+              </span>
+            </div>
+
+            {/* Video preview / download section */}
+            {videoBlobUrl && (
+              <div className="max-w-md mx-auto p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-400">
+                  <span className="flex items-center gap-1.5"><VideoIcon size={14} className="text-blue-400" /> Recorded Session</span>
+                  <a href={videoBlobUrl} download={`mock-interview-${selectedRole}.webm`} className="text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
+                    <Download size={12} /> Download WebM
+                  </a>
+                </div>
+                <video src={videoBlobUrl} controls className="w-full rounded-lg border border-white/10 aspect-video bg-black" />
+              </div>
+            )}
+
+            <p className="text-sm text-slate-400 max-w-md mx-auto">
               {result.score >= 85
                 ? 'Outstanding performance! Clear articulation, strong depth, and excellent keyword coverage.'
                 : result.score >= 70
@@ -268,16 +356,16 @@ export default function MockInterview() {
                   : 'Keep practicing! Focus on structured responses using the STAR method and learning domain terminology.'}
             </p>
 
-            <div className="grid grid-cols-3 gap-4 mt-8 max-w-sm mx-auto">
-              <div className="p-3 rounded-xl" style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)' }}>
+            <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
+              <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
                 <p className="text-xl font-bold text-blue-400">{mockInterviewsDone}</p>
                 <p className="text-xs text-slate-500 mt-1">Interviews</p>
               </div>
-              <div className="p-3 rounded-xl" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
                 <p className="text-xl font-bold text-amber-400">+150</p>
                 <p className="text-xs text-slate-500 mt-1">XP Earned</p>
               </div>
-              <div className="p-3 rounded-xl" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)' }}>
+              <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
                 <p className="text-xl font-bold text-purple-400">+75</p>
                 <p className="text-xs text-slate-500 mt-1">Coins</p>
               </div>
@@ -305,7 +393,7 @@ export default function MockInterview() {
                   </span>
                 </div>
                 <p className="text-slate-400 text-xs italic px-3 py-2 rounded-xl border-l-2 border-slate-600" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  "{item.answer.length > 200 ? item.answer.slice(0, 200) + '…' : item.answer}"
+                  "{item.answer}"
                 </p>
                 <p className="text-xs text-slate-400 flex items-start gap-2">
                   <Sparkles size={12} className="text-blue-400 mt-0.5 flex-shrink-0" />
@@ -332,24 +420,47 @@ export default function MockInterview() {
   if (selectedRole) {
     const roleObj = interviewRoles.find(r => r.id === selectedRole);
     const question = roleObj.questions[qIndex];
-    const progress = ((qIndex) / roleObj.questions.length) * 100;
 
     return (
       <Layout title={`Mock Interview — ${roleObj.title}`}>
         <div className="max-w-2xl mx-auto space-y-5">
-          {/* Header progress */}
           <div className="flex items-center justify-between mb-1">
-            <button onClick={() => setSelectedRole(null)} className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
+            <button onClick={() => { stopMediaRecording(); setSelectedRole(null); }} className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
               ← Exit Interview
             </button>
             <span className="text-xs text-slate-500">{qIndex + 1} / {roleObj.questions.length}</span>
           </div>
-          <div className="h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+          <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
             <motion.div
               className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)', width: `${((qIndex + 1) / roleObj.questions.length) * 100}%` }}
+              style={{ background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)' }}
               animate={{ width: `${((qIndex + 1) / roleObj.questions.length) * 100}%` }}
+              transition={{ duration: 0.3 }}
             />
+          </div>
+
+          {/* Video Preview Box (if active) */}
+          <div className="relative rounded-xl overflow-hidden border border-white/10 aspect-video bg-black/60 flex items-center justify-center">
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ display: isRecording ? 'block' : 'none' }}
+            />
+            {!isRecording && (
+              <div className="text-center p-6 space-y-2">
+                <VideoIcon size={40} className="text-slate-600 mx-auto" />
+                <p className="text-sm font-semibold text-slate-400">Camera Preview Inactive</p>
+                <p className="text-xs text-slate-500">Click the microphone to start audio/video recording.</p>
+              </div>
+            )}
+            {isRecording && (
+              <div className="absolute top-4 left-4 flex items-center gap-1.5 text-xs text-red-400 font-bold bg-red-500/10 px-2 py-1 rounded-full animate-pulse border border-red-500/20">
+                <span className="w-2 h-2 rounded-full bg-red-500" /> REC {formatSecs(recordTime)}
+              </div>
+            )}
           </div>
 
           {/* Question Card */}
@@ -359,23 +470,16 @@ export default function MockInterview() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}
-              className="glass p-8"
+              className="glass p-8 border border-white/10"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full uppercase tracking-wider">
-                  Question {qIndex + 1}
-                </span>
-                {isRecording && (
-                  <span className="flex items-center gap-1.5 text-xs text-red-400 font-bold bg-red-500/10 px-2 py-1 rounded-full animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-red-500" /> REC {formatSecs(recordTime)}
-                  </span>
-                )}
-              </div>
+              <span className="text-xs font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                Question {qIndex + 1}
+              </span>
               <h3 className="text-lg font-semibold text-white leading-relaxed">{question}</h3>
             </motion.div>
           </AnimatePresence>
 
-          {/* Recording & Response */}
+          {/* Recording & Response controls */}
           {!analyzing ? (
             <div className="glass p-6 space-y-5">
               <div className="flex justify-center">
@@ -407,13 +511,13 @@ export default function MockInterview() {
 
               <div>
                 <label className="text-xs text-slate-500 font-medium mb-1.5 block">
-                  {isRecording ? '🎙️ Listening… or type your answer below' : '💬 Your Answer (type or use the mic)'}
+                  {isRecording ? '🎙️ Recording session... speak your answer or type below' : '💬 Your Response'}
                 </label>
                 <textarea
                   value={responseText}
                   onChange={(e) => setResponseText(e.target.value)}
-                  placeholder="Click the microphone to start speaking, or type your answer here..."
-                  className="input-field py-3"
+                  placeholder="Click the mic button to start recording, or type your answer here..."
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-slate-300 font-sans focus:border-blue-500 outline-none resize-none"
                   rows={5}
                 />
               </div>
@@ -425,7 +529,7 @@ export default function MockInterview() {
                   onClick={handleNext}
                   className="btn-primary w-full py-3 flex items-center justify-center gap-2"
                 >
-                  <span>{qIndex + 1 < roleObj.questions.length ? 'Next Question' : '📊 Submit & Analyze'}</span>
+                  <span>{qIndex + 1 < roleObj.questions.length ? 'Next Question' : '📊 Finish & Analyze'}</span>
                   <ChevronRight size={16} />
                 </motion.button>
               )}
@@ -434,7 +538,7 @@ export default function MockInterview() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="glass p-12 text-center flex flex-col items-center"
+              className="glass p-12 text-center flex flex-col items-center border border-white/10"
             >
               <div className="relative mb-6">
                 <Sparkles size={48} className="text-blue-400 animate-pulse" />
@@ -467,7 +571,7 @@ export default function MockInterview() {
         <div>
           <h2 className="font-display font-bold text-2xl text-white mb-1">🎤 AI Mock Interview Simulator</h2>
           <p className="text-slate-500 text-sm">
-            Practice role-specific interview questions and get instant AI feedback on your answers. Questions are tailored to your chosen role.
+            Practice role-specific interview questions with live camera recording and get detailed AI feedback reports.
           </p>
         </div>
 
@@ -510,7 +614,7 @@ export default function MockInterview() {
                 onClick={() => handleStart(role.id)}
                 className="btn-primary w-full py-2.5 flex items-center justify-center gap-2 text-sm"
               >
-                <Mic size={14} /> Start Interview
+                <VideoIcon size={14} /> Start Interview
               </button>
             </motion.div>
           ))}

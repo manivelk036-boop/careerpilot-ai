@@ -1,9 +1,9 @@
 import Layout from '../components/Layout';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Video, Code, FileText, Layers, CheckCircle2, Lock, ExternalLink, PlayCircle, AlertCircle } from 'lucide-react';
+import { BookOpen, Video, Code, FileText, CheckCircle2, PlayCircle, Eye, ExternalLink, Sparkles, Award } from 'lucide-react';
 import { useStudentStore } from '../store/useStudentStore';
-import { learningDataByGoal } from '../data/learningData';
+import { contentByGoal, getContentForGoal } from '../data/learningData';
 import toast from 'react-hot-toast';
 
 const tabs = [
@@ -13,91 +13,78 @@ const tabs = [
   { id: 'assignments', label: 'Assignments', icon: FileText },
 ];
 
-const getTopicLockState = (topicsList, idx, completedList, scoresMap) => {
-  if (idx === 0) return { locked: false, reason: '' };
-  
-  const prevTopic = topicsList[idx - 1];
-  const prevCompleted = completedList.includes(prevTopic.id);
-  const prevQuizScore = scoresMap[prevTopic.id] || 0;
-  const prevPassed = prevQuizScore >= 70;
-  
-  if (!prevCompleted) {
-    return { locked: true, reason: `🔒 Complete previous topic "${prevTopic.title}" first.` };
-  }
-  if (!prevPassed) {
-    return { locked: true, reason: `🔒 Pass "${prevTopic.title}" Quiz with 70%+ (Current: ${prevQuizScore}%).` };
-  }
-  
-  return getTopicLockState(topicsList, idx - 1, completedList, scoresMap);
-};
-
 export default function Learning() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
-  const { topicsCompleted, completeTopic, careerGoal, roadmapProgress, quizScores } = useStudentStore();
-
-  let goalKey = 'default';
-  if (careerGoal === 'java-developer') {
-    goalKey = 'java-developer';
-  } else if (careerGoal === 'python-developer' || careerGoal === 'data-analyst' || careerGoal === 'ai-engineer') {
-    goalKey = 'python-developer';
-  } else if (careerGoal === 'uiux-designer') {
-    goalKey = 'uiux-designer';
-  }
+  const [revealedHints, setRevealedHints] = useState({});
+  const [assignmentSubmitted, setAssignmentSubmitted] = useState({});
   
-  const standardTopics = learningDataByGoal[goalKey] || learningDataByGoal['default'];
-  const customOrder = roadmapProgress?.customOrder || [];
+  const { topicsCompleted, completeTopic, careerGoal, addXP, addCoins } = useStudentStore();
 
-  // Sort: topics whose title or ID is in customOrder should go first (weak topics)
-  const weakTopics = standardTopics.filter(t => 
-    customOrder.some(co => t.title.toLowerCase().includes(co.toLowerCase()) || t.id.toLowerCase().includes(co.toLowerCase()))
-  );
-  const otherTopics = standardTopics.filter(t => !weakTopics.includes(t));
-  const topics = [...weakTopics, ...otherTopics];
+  const topics = contentByGoal[careerGoal] || contentByGoal['java-developer'];
 
   const handleComplete = (topicId) => {
     completeTopic(topicId);
-    toast.success('Topic completed! +100 XP +20 🪙. Take the quiz to unlock the next topic!', { icon: '🎉' });
+    toast.success('Topic completed! +100 XP +20 🪙. Go to Roadmap to take the baseline quiz!', { icon: '🎉' });
   };
 
-  const handleTopicClick = (topic, idx) => {
-    const lockState = getTopicLockState(topics, idx, topicsCompleted, quizScores);
-    if (lockState.locked) {
-      toast.error(lockState.reason);
+  const toggleHint = (index) => {
+    setRevealedHints(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const submitAssignment = (topicId) => {
+    if (assignmentSubmitted[topicId]) {
+      toast('Assignment already submitted for this topic!', { icon: '📝' });
       return;
     }
-    setSelectedTopic(topic.id);
+    setAssignmentSubmitted(prev => ({ ...prev, [topicId]: true }));
+    addXP(75);
+    addCoins(20);
+    toast.success('Assignment submitted successfully! +75 XP +20 🪙', { icon: '🚀' });
   };
 
   if (selectedTopic) {
     const t = topics.find(t => t.id === selectedTopic);
     const isDone = topicsCompleted.includes(t.id);
+    const isSubmitted = assignmentSubmitted[t.id];
+
     return (
       <Layout title={t.title}>
         <div className="max-w-4xl mx-auto space-y-4">
           {/* Breadcrumb */}
-          <button onClick={() => setSelectedTopic(null)} className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">← Back to Topics</button>
+          <button onClick={() => { setSelectedTopic(null); setRevealedHints({}); }} className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
+            ← Back to Topics
+          </button>
 
           {/* Topic Header */}
           <div className="glass p-6">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs px-2 py-1 rounded-full text-blue-300" style={{ background: 'rgba(59,130,246,0.1)' }}>{t.module}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${ t.difficulty === 'Beginner' ? 'text-emerald-400' : 'text-amber-400' }`} style={{ background: t.difficulty === 'Beginner' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)' }}>{t.difficulty}</span>
+                  <span className="text-xs px-2.5 py-1 rounded-full text-blue-300 bg-blue-500/10 font-semibold uppercase tracking-wider">
+                    {careerGoal.replace('-', ' ')}
+                  </span>
+                  <span className="text-xs px-2.5 py-1 rounded-full text-emerald-400 bg-emerald-500/10 font-semibold">
+                    {t.duration}
+                  </span>
                 </div>
                 <h2 className="font-display font-bold text-2xl text-white mb-1">{t.title}</h2>
-                <p className="text-slate-500 text-sm">{t.duration} · +{t.xp} XP</p>
+                <p className="text-slate-400 text-sm">Study the notes, watch the video, and complete the practice sets.</p>
               </div>
-              {!isDone ? (
-                <button onClick={() => handleComplete(t.id)} className="btn-primary flex items-center gap-2">
-                  <CheckCircle2 size={16} /> Mark Complete
-                </button>
-              ) : (
-                <span className="flex items-center gap-2 text-emerald-400 font-medium text-sm px-4 py-2 rounded-xl" style={{ background: 'rgba(16,185,129,0.1)' }}>
-                  <CheckCircle2 size={16} /> Completed!
-                </span>
-              )}
+              <div className="flex-shrink-0">
+                {isDone ? (
+                  <span className="flex items-center gap-2 text-emerald-400 font-semibold text-sm px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <CheckCircle2 size={16} /> Completed!
+                  </span>
+                ) : (
+                  <button onClick={() => handleComplete(t.id)} className="btn-primary flex items-center gap-2 px-5 py-2.5">
+                    <CheckCircle2 size={16} /> Mark Topic Done
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -105,7 +92,7 @@ export default function Learning() {
           <div className="flex gap-2 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-sm font-medium transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-sm font-semibold transition-all"
                 style={activeTab === tab.id ? { background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', color: 'white' } : { color: '#64748B' }}>
                 <tab.icon size={14} />{tab.label}
               </button>
@@ -113,147 +100,148 @@ export default function Learning() {
           </div>
 
           {/* Tab Content */}
-          <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass p-6">
-            {activeTab === 'notes' && (
-              <div className="space-y-4">
-                <h3 className="font-semibold text-white mb-4">📖 Study Notes</h3>
-                {t.notes.map((note, i) => (
-                  <div key={i} className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <pre className="text-slate-300 text-sm whitespace-pre-wrap font-sans">{note}</pre>
+          <AnimatePresence mode="wait">
+            <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="glass p-6">
+              
+              {/* NOTES */}
+              {activeTab === 'notes' && (
+                <div className="space-y-4 prose prose-invert max-w-none">
+                  <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5 whitespace-pre-wrap text-slate-300 font-sans leading-relaxed text-sm">
+                    {t.notes}
                   </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'videos' && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-white mb-4">🎬 Video Tutorials</h3>
-                {t.videos.map((v, i) => (
-                  <div key={i} className="flex items-center gap-4 p-4 rounded-xl transition-all hover:bg-white/5 cursor-pointer" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(239,68,68,0.1)' }}>
-                      <PlayCircle size={24} className="text-red-400" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-white text-sm">{v.title}</p>
-                      <p className="text-xs text-slate-500">{v.channel} · {v.duration}</p>
-                    </div>
-                    <ExternalLink size={14} className="text-slate-600" />
+                </div>
+              )}
+
+              {/* VIDEOS */}
+              {activeTab === 'videos' && (
+                <div className="space-y-4 text-center">
+                  <h3 className="font-semibold text-white text-left mb-2">🎬 Video Tutorial</h3>
+                  <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={t.videoUrl}
+                      title={t.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="absolute inset-0"
+                    />
                   </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'practice' && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-white mb-4">🧩 Practice Questions</h3>
-                {t.questions.map((q, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)' }}>
-                    <span className="text-purple-400 font-bold text-sm flex-shrink-0">Q{i+1}.</span>
-                    <p className="text-slate-300 text-sm">{q}</p>
+                  <p className="text-xs text-slate-500 mt-2">Watch the full video to master the basic principles of {t.title}.</p>
+                </div>
+              )}
+
+              {/* PRACTICE */}
+              {activeTab === 'practice' && (
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-white mb-2">🧩 Hands-on Coding Practice</h3>
+                  <div className="space-y-3">
+                    {t.practiceQuestions.map((q, idx) => (
+                      <div key={idx} className="p-4 rounded-xl border border-blue-500/10 bg-blue-500/5 space-y-3">
+                        <div className="flex items-start gap-3">
+                          <span className="text-blue-400 font-bold text-sm">Q{idx + 1}.</span>
+                          <p className="text-slate-300 text-sm font-medium">{q.q}</p>
+                        </div>
+                        
+                        <button
+                          onClick={() => toggleHint(idx)}
+                          className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 font-semibold"
+                        >
+                          <Eye size={12} /> {revealedHints[idx] ? 'Hide Solution/Hint' : 'Show Solution/Hint'}
+                        </button>
+                        
+                        {revealedHints[idx] && (
+                          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="p-3 rounded-lg bg-black/40 border border-white/10 font-mono text-xs text-emerald-400">
+                            {q.hint}
+                          </motion.div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'assignments' && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-white mb-4">📝 Assignments</h3>
-                {t.assignments.map((a, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.15)' }}>
-                    <span className="text-emerald-400 font-bold text-sm flex-shrink-0">{i+1}.</span>
-                    <p className="text-slate-300 text-sm">{a}</p>
+                </div>
+              )}
+
+              {/* ASSIGNMENTS */}
+              {activeTab === 'assignments' && (
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-white mb-2">📝 Topic Assignment</h3>
+                  <div className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/5 space-y-3">
+                    <p className="text-slate-300 text-sm font-medium leading-relaxed">{t.assignment}</p>
                   </div>
-                ))}
-                <button className="btn-primary flex items-center gap-2 mt-2"><FileText size={16} /> Submit Assignment (+75 XP)</button>
-              </div>
-            )}
-          </motion.div>
+
+                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+                    <label className="text-xs font-semibold text-slate-400 block">Submit your code or description:</label>
+                    <textarea
+                      placeholder="Paste your solution or program code here..."
+                      rows={6}
+                      disabled={isSubmitted}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-slate-300 font-mono focus:border-blue-500 outline-none resize-none"
+                    />
+                    
+                    <button
+                      onClick={() => submitAssignment(t.id)}
+                      disabled={isSubmitted}
+                      className={`w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                        isSubmitted ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'btn-primary'
+                      }`}
+                    >
+                      {isSubmitted ? (
+                        <><CheckCircle2 size={16} /> Assignment Submitted Successfully!</>
+                      ) : (
+                        <><FileText size={16} /> Submit Assignment (+75 XP)</>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Learning">
+    <Layout title="Learning Hub">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-display font-bold text-2xl text-white">Learning Topics</h2>
-            <p className="text-slate-500 text-sm mt-1">Master each topic to unlock the next level</p>
+            <h2 className="font-display font-bold text-2xl text-white">Learning Paths</h2>
+            <p className="text-slate-500 text-sm mt-1">Select a topic below to start mastering skills.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-emerald-400 font-medium px-3 py-1.5 rounded-xl" style={{ background: 'rgba(16,185,129,0.1)' }}>
-              {topicsCompleted.filter(tc => topics.some(t => t.id === tc)).length}/{topics.length} Completed
-            </span>
-          </div>
+          <span className="text-xs text-emerald-400 font-semibold px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            {topicsCompleted.filter(tc => topics.some(t => t.id === tc)).length}/{topics.length} Completed
+          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {topics.map((topic, i) => {
             const isDone = topicsCompleted.includes(topic.id);
-            const lockState = getTopicLockState(topics, i, topicsCompleted, quizScores);
-            const isLocked = lockState.locked;
-            
-            const quizScore = quizScores[topic.id] || 0;
-            const quizPassed = quizScore >= 70;
-
             return (
               <motion.div
                 key={topic.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                whileHover={!isLocked ? { y: -3 } : {}}
-                className={`glass p-5 transition-all ${isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                style={{ 
-                  border: isDone && quizPassed ? '1px solid rgba(16,185,129,0.3)' : isLocked ? '1px solid rgba(255,255,255,0.03)' : '1px solid rgba(255,255,255,0.08)' 
-                }}
-                onClick={() => handleTopicClick(topic, i)}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -2 }}
+                className="glass p-5 cursor-pointer hover:border-blue-500/30 transition-all flex items-center justify-between"
+                onClick={() => setSelectedTopic(topic.id)}
               >
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-2xl">
+                    {topic.icon}
+                  </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs text-slate-500">{topic.module}</p>
-                      {customOrder.some(co => topic.title.toLowerCase().includes(co.toLowerCase()) || topic.id.toLowerCase().includes(co.toLowerCase())) && (
-                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 font-bold uppercase tracking-wider scale-95">Focus</span>
-                      )}
-                    </div>
-                    <h3 className="font-semibold text-white mt-1">{topic.title}</h3>
+                    <h3 className="font-semibold text-white text-sm">{topic.title}</h3>
+                    <p className="text-xs text-slate-500 mt-1">{topic.duration}</p>
                   </div>
-                  {isLocked ? (
-                    <Lock size={18} className="text-slate-600 flex-shrink-0" />
-                  ) : isDone ? (
-                    <CheckCircle2 size={20} className="text-emerald-400 flex-shrink-0" />
-                  ) : (
-                    <BookOpen size={20} className="text-slate-600 flex-shrink-0" />
-                  )}
                 </div>
-                
-                <div className="flex items-center gap-3 text-xs">
-                  <span className={`px-2 py-0.5 rounded-full ${ topic.difficulty === 'Beginner' ? 'text-emerald-400' : 'text-amber-400' }`} style={{ background: topic.difficulty === 'Beginner' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)' }}>{topic.difficulty}</span>
-                  <span className="text-slate-500">{topic.duration}</span>
-                  <span className="text-blue-400">+{topic.xp} XP</span>
-                </div>
-
-                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <span className="flex items-center gap-1"><BookOpen size={11} /> Notes</span>
-                    <span className="flex items-center gap-1"><Video size={11} /> Videos</span>
-                    <span className="flex items-center gap-1"><Code size={11} /> Practice</span>
-                  </div>
-                  {isLocked && (
-                    <span className="text-[10px] text-rose-400 flex items-center gap-1">
-                      <AlertCircle size={10} /> Locked
-                    </span>
-                  )}
-                  {!isLocked && isDone && !quizPassed && (
-                    <span className="text-[10px] text-amber-400 font-semibold">
-                      ⚠️ Quiz Pending ({quizScore}%)
-                    </span>
-                  )}
-                  {!isLocked && isDone && quizPassed && (
-                    <span className="text-[10px] text-emerald-400 font-semibold">
-                      ✓ Quiz Passed ({quizScore}%)
-                    </span>
-                  )}
-                </div>
+                {isDone ? (
+                  <CheckCircle2 size={20} className="text-emerald-400" />
+                ) : (
+                  <PlayCircle size={20} className="text-blue-400" />
+                )}
               </motion.div>
             );
           })}
