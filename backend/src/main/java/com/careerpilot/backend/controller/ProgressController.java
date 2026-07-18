@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/progress")
+@RequestMapping("/api/progress")
 @CrossOrigin
 public class ProgressController {
 

@@ -45,19 +45,19 @@ public class SecurityConfig {
                 // Public: auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Public: read-only LMS data
-                .requestMatchers(HttpMethod.GET, "/courses", "/courses/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/modules/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/videos/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/notes/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/quiz/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/courses", "/api/courses/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/modules/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/videos/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notes/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/quiz/**").permitAll()
                 // Public: H2 console (dev only)
                 .requestMatchers("/h2-console/**").permitAll()
                 // Authenticated: student-specific
                 .requestMatchers("/api/student/**").authenticated()
-                .requestMatchers("/progress/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/quiz/submit").authenticated()
+                .requestMatchers("/api/progress/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/quiz/submit").authenticated()
                 // Admin: any authenticated user (role-based auth can be added later)
-                .requestMatchers("/admin/**").authenticated()
+                .requestMatchers("/api/admin/**").authenticated()
                 // Everything else requires auth
                 .anyRequest().authenticated()
             )
