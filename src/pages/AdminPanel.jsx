@@ -7,6 +7,7 @@ import { adminGetCourses, adminCreateCourse, adminUpdateCourse, adminDeleteCours
 import Layout from '../components/Layout';
 import { Plus, Edit2, Trash2, BookOpen, Layers, Play, FileText, Brain, ChevronRight, X, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 export default function AdminPanel() {
   const [courses, setCourses] = useState([]);
