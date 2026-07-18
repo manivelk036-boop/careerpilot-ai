@@ -25,7 +25,7 @@ public class ModuleController {
 
     @GetMapping("/modules/course/{courseId}")
     public ResponseEntity<?> getModulesByCourse(@PathVariable Long courseId) {
-        List<CourseModule> modules = moduleRepository.findByCourseIdOrderByModuleOrderAsc(courseId);
+        List<CourseModule> modules = moduleRepository.findByCourse_IdOrderByModuleOrderAsc(courseId);
 
         List<Map<String, Object>> result = modules.stream().map(m -> {
             Map<String, Object> map = new HashMap<>();
@@ -34,10 +34,10 @@ public class ModuleController {
             map.put("description", m.getDescription());
             map.put("moduleOrder", m.getModuleOrder());
             map.put("courseId", m.getCourseId());
-            map.put("hasVideos", videoRepository.countByModuleId(m.getId()) > 0);
-            map.put("hasNotes", notesRepository.findByModuleId(m.getId()).size() > 0);
-            map.put("hasQuiz", quizRepository.countByModuleId(m.getId()) > 0);
-            map.put("videoCount", videoRepository.countByModuleId(m.getId()));
+            map.put("hasVideos", videoRepository.countByModule_Id(m.getId()) > 0);
+            map.put("hasNotes", notesRepository.findByModule_Id(m.getId()).size() > 0);
+            map.put("hasQuiz", quizRepository.countByModule_Id(m.getId()) > 0);
+            map.put("videoCount", videoRepository.countByModule_Id(m.getId()));
             return map;
         }).toList();
 

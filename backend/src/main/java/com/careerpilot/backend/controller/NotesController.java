@@ -18,7 +18,7 @@ public class NotesController {
 
     @GetMapping("/notes/module/{moduleId}")
     public ResponseEntity<?> getNotesByModule(@PathVariable Long moduleId) {
-        var notes = notesRepository.findByModuleId(moduleId);
+        var notes = notesRepository.findByModule_Id(moduleId);
         List<Map<String, Object>> result = notes.stream().map(n -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", n.getId());

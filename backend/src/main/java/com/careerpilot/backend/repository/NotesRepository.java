@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface NotesRepository extends JpaRepository<Notes, Long> {
-    List<Notes> findByModuleId(Long moduleId);
+    List<Notes> findByModule_Id(Long moduleId);
 }

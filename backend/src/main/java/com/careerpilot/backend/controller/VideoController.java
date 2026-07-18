@@ -18,7 +18,7 @@ public class VideoController {
 
     @GetMapping("/videos/module/{moduleId}")
     public ResponseEntity<?> getVideosByModule(@PathVariable Long moduleId) {
-        var videos = videoRepository.findByModuleIdOrderByOrderNoAsc(moduleId);
+        var videos = videoRepository.findByModule_IdOrderByOrderNoAsc(moduleId);
         List<Map<String, Object>> result = videos.stream().map(v -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", v.getId());

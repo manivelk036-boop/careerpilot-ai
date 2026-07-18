@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ModuleRepository extends JpaRepository<CourseModule, Long> {
-    List<CourseModule> findByCourseIdOrderByModuleOrderAsc(Long courseId);
-    long countByCourseId(Long courseId);
+    List<CourseModule> findByCourse_IdOrderByModuleOrderAsc(Long courseId);
+    long countByCourse_Id(Long courseId);
 }

@@ -18,7 +18,7 @@ public class QuizService {
     @Autowired private ModuleRepository moduleRepository;
 
     public List<QuizQuestion> getQuestionsByModule(Long moduleId) {
-        return quizRepository.findByModuleId(moduleId);
+        return quizRepository.findByModule_Id(moduleId);
     }
 
     /**
@@ -27,7 +27,7 @@ public class QuizService {
      */
     public Map<String, Object> submitQuiz(Long studentId, Long moduleId, Long courseId,
                                           Map<Long, Integer> answers) {
-        List<QuizQuestion> questions = quizRepository.findByModuleId(moduleId);
+        List<QuizQuestion> questions = quizRepository.findByModule_Id(moduleId);
 
         int correct = 0;
         List<Map<String, Object>> feedback = new ArrayList<>();

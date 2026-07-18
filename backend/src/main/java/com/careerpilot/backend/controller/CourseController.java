@@ -45,7 +45,7 @@ public class CourseController {
                     detail.put("durationHours", course.getDurationHours());
 
                     List<CourseModule> modules =
-                            moduleRepository.findByCourseIdOrderByModuleOrderAsc(id);
+                            moduleRepository.findByCourse_IdOrderByModuleOrderAsc(id);
                     detail.put("modules", modules.stream().map(m -> {
                         Map<String, Object> mod = new HashMap<>();
                         mod.put("id", m.getId());

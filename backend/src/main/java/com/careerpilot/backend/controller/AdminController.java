@@ -172,21 +172,21 @@ public class AdminController {
 
     @GetMapping("/modules/{courseId}")
     public ResponseEntity<?> getModulesForCourse(@PathVariable Long courseId) {
-        return ResponseEntity.ok(moduleRepository.findByCourseIdOrderByModuleOrderAsc(courseId));
+        return ResponseEntity.ok(moduleRepository.findByCourse_IdOrderByModuleOrderAsc(courseId));
     }
 
     @GetMapping("/videos/{moduleId}")
     public ResponseEntity<?> getVideosForModule(@PathVariable Long moduleId) {
-        return ResponseEntity.ok(videoRepository.findByModuleIdOrderByOrderNoAsc(moduleId));
+        return ResponseEntity.ok(videoRepository.findByModule_IdOrderByOrderNoAsc(moduleId));
     }
 
     @GetMapping("/notes/{moduleId}")
     public ResponseEntity<?> getNotesForModule(@PathVariable Long moduleId) {
-        return ResponseEntity.ok(notesRepository.findByModuleId(moduleId));
+        return ResponseEntity.ok(notesRepository.findByModule_Id(moduleId));
     }
 
     @GetMapping("/quiz/{moduleId}")
     public ResponseEntity<?> getQuizForModule(@PathVariable Long moduleId) {
-        return ResponseEntity.ok(quizRepository.findByModuleId(moduleId));
+        return ResponseEntity.ok(quizRepository.findByModule_Id(moduleId));
     }
 }

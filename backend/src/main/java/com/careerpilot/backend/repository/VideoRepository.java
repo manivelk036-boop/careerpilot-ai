@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Video, Long> {
-    List<Video> findByModuleIdOrderByOrderNoAsc(Long moduleId);
-    long countByModuleId(Long moduleId);
+    List<Video> findByModule_IdOrderByOrderNoAsc(Long moduleId);
+    long countByModule_Id(Long moduleId);
 }

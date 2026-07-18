@@ -34,13 +34,13 @@ public class CourseService {
             courseMap.put("instructor", course.getInstructor());
             courseMap.put("durationHours", course.getDurationHours());
 
-            long totalModules = moduleRepository.countByCourseId(course.getId());
+            long totalModules = moduleRepository.countByCourse_Id(course.getId());
             courseMap.put("totalModules", totalModules);
 
             // Count total videos across all modules
-            List<CourseModule> modules = moduleRepository.findByCourseIdOrderByModuleOrderAsc(course.getId());
+            List<CourseModule> modules = moduleRepository.findByCourse_IdOrderByModuleOrderAsc(course.getId());
             long totalVideos = modules.stream()
-                    .mapToLong(m -> videoRepository.countByModuleId(m.getId()))
+                    .mapToLong(m -> videoRepository.countByModule_Id(m.getId()))
                     .sum();
             courseMap.put("totalVideos", totalVideos);
 

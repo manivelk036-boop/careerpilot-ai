@@ -21,7 +21,7 @@ public class QuizController {
 
     @GetMapping("/quiz/module/{moduleId}")
     public ResponseEntity<?> getQuizByModule(@PathVariable Long moduleId) {
-        var questions = quizRepository.findByModuleId(moduleId);
+        var questions = quizRepository.findByModule_Id(moduleId);
         // Don't expose correctAnswer to frontend during quiz
         List<Map<String, Object>> result = questions.stream().map(q -> {
             Map<String, Object> map = new HashMap<>();
