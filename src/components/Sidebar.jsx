@@ -4,15 +4,15 @@ import { getLevelInfo } from '../data/students';
 import {
   LayoutDashboard, Map, BookOpen, Brain, FileText,
   Mic, Building2, TrendingUp, Trophy, User, Settings,
-  Zap, Target, ChevronLeft, ChevronRight, Flame, BarChart3
+  Zap, Target, ChevronLeft, ChevronRight, Flame, BarChart3, Shield
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
   { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { path: '/courses', icon: BookOpen, label: 'Courses' },
   { path: '/roadmap', icon: Map, label: 'My Roadmap' },
-  { path: '/learning', icon: BookOpen, label: 'Learning' },
   { path: '/quiz', icon: Brain, label: 'Assessments' },
   { path: '/aptitude', icon: Target, label: 'Aptitude' },
   { path: '/placement-score', icon: BarChart3, label: 'Placement Score' },
@@ -21,6 +21,7 @@ const navItems = [
   { path: '/companies', icon: Building2, label: 'Company Match' },
   { path: '/salary', icon: TrendingUp, label: 'Salary Predictor' },
   { path: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
+  { path: '/admin', icon: Shield, label: 'LMS Admin' },
   { path: '/profile', icon: User, label: 'Profile' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];

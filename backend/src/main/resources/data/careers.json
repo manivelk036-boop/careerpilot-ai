@@ -1,0 +1,1227 @@
+[
+  {
+    "id": "java-developer",
+    "title": "Java Developer",
+    "icon": "☕",
+    "color": "from-orange-500 to-red-500",
+    "description": "Build enterprise-grade backend systems with Java & Spring Boot",
+    "avgSalary": "6-15 LPA",
+    "demand": "Very High",
+    "duration": "7 months",
+    "companies": [
+      "TCS",
+      "Infosys",
+      "Wipro",
+      "HCL",
+      "Cognizant"
+    ],
+    "skills": [
+      "Java",
+      "OOP",
+      "Spring Boot",
+      "MySQL",
+      "REST API"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Java Fundamentals",
+        "topics": [
+          "Variables & Data Types",
+          "Control Flow",
+          "Loops",
+          "Functions",
+          "Arrays"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "OOP Concepts",
+        "topics": [
+          "Classes & Objects",
+          "Inheritance",
+          "Polymorphism",
+          "Encapsulation",
+          "Abstraction"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Advanced Java",
+        "topics": [
+          "Collections Framework",
+          "Exception Handling",
+          "File I/O",
+          "Generics",
+          "Lambda Expressions"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Database & JDBC",
+        "topics": [
+          "SQL Basics",
+          "JDBC",
+          "MySQL",
+          "Stored Procedures",
+          "Transactions"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Spring Boot",
+        "topics": [
+          "Spring Core",
+          "Spring MVC",
+          "Spring Boot",
+          "REST APIs",
+          "Spring Security"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Project Development",
+        "topics": [
+          "System Design",
+          "Git & GitHub",
+          "Docker Basics",
+          "Testing",
+          "CI/CD Basics"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Interview Prep",
+        "topics": [
+          "DSA in Java",
+          "System Design",
+          "Mock Interviews",
+          "HR Prep",
+          "Company Research"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fullstack-developer",
+    "title": "Full Stack Developer",
+    "icon": "🌐",
+    "color": "from-blue-500 to-cyan-500",
+    "description": "Master both frontend and backend to build complete web applications",
+    "avgSalary": "8-20 LPA",
+    "demand": "Very High",
+    "duration": "8 months",
+    "companies": [
+      "Flipkart",
+      "Amazon",
+      "Swiggy",
+      "Razorpay",
+      "Zoho"
+    ],
+    "skills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Express",
+      "JavaScript"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "HTML & CSS",
+        "topics": [
+          "HTML5 Semantics",
+          "CSS3 & Flexbox",
+          "Grid Layout",
+          "Responsive Design",
+          "Bootstrap"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "JavaScript",
+        "topics": [
+          "JS Fundamentals",
+          "DOM Manipulation",
+          "ES6+",
+          "Async/Await",
+          "Fetch API"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "React.js",
+        "topics": [
+          "React Basics",
+          "Hooks",
+          "State Management",
+          "React Router",
+          "Context API"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Backend - Node.js",
+        "topics": [
+          "Node.js",
+          "Express.js",
+          "REST APIs",
+          "Middleware",
+          "Authentication"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Database",
+        "topics": [
+          "MongoDB",
+          "Mongoose",
+          "SQL Basics",
+          "PostgreSQL",
+          "Redis Intro"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "DevOps Basics",
+        "topics": [
+          "Git & GitHub",
+          "Docker",
+          "AWS Basics",
+          "CI/CD",
+          "Deployment"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Full Stack Project",
+        "topics": [
+          "E-Commerce App",
+          "Auth System",
+          "File Upload",
+          "Payment Integration",
+          "Testing"
+        ]
+      },
+      {
+        "month": 8,
+        "title": "Interview Prep",
+        "topics": [
+          "DSA",
+          "System Design",
+          "Mock Interviews",
+          "Portfolio",
+          "Resume"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data-analyst",
+    "title": "Data Analyst",
+    "icon": "📊",
+    "color": "from-green-500 to-emerald-500",
+    "description": "Transform raw data into actionable business insights",
+    "avgSalary": "5-12 LPA",
+    "demand": "High",
+    "duration": "6 months",
+    "companies": [
+      "Deloitte",
+      "KPMG",
+      "Accenture",
+      "Mu Sigma",
+      "Fractal"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Tableau"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Python Basics",
+        "topics": [
+          "Python Syntax",
+          "Data Types",
+          "Functions",
+          "File Handling",
+          "Libraries"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "Data Manipulation",
+        "topics": [
+          "NumPy",
+          "Pandas",
+          "Data Cleaning",
+          "Data Wrangling",
+          "EDA"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "SQL & Databases",
+        "topics": [
+          "SQL Queries",
+          "Joins",
+          "Aggregations",
+          "Window Functions",
+          "MySQL"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Visualization",
+        "topics": [
+          "Matplotlib",
+          "Seaborn",
+          "Power BI",
+          "Tableau",
+          "Dashboard Design"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Statistics & ML",
+        "topics": [
+          "Descriptive Stats",
+          "Probability",
+          "Regression",
+          "Classification",
+          "Clustering"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Projects & Interview",
+        "topics": [
+          "Capstone Project",
+          "Case Studies",
+          "SQL Tests",
+          "Communication",
+          "Mock Interviews"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ai-engineer",
+    "title": "AI/ML Engineer",
+    "icon": "🤖",
+    "color": "from-purple-500 to-violet-500",
+    "description": "Build intelligent systems using machine learning and deep learning",
+    "avgSalary": "10-25 LPA",
+    "demand": "Extremely High",
+    "duration": "9 months",
+    "companies": [
+      "Google",
+      "Microsoft",
+      "NVIDIA",
+      "OpenAI",
+      "Samsung"
+    ],
+    "skills": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "OpenCV"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Python & Math",
+        "topics": [
+          "Python Advanced",
+          "Linear Algebra",
+          "Statistics",
+          "Calculus",
+          "NumPy"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "ML Fundamentals",
+        "topics": [
+          "Supervised Learning",
+          "Unsupervised Learning",
+          "Model Evaluation",
+          "Scikit-learn",
+          "Feature Engineering"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Deep Learning",
+        "topics": [
+          "Neural Networks",
+          "CNNs",
+          "RNNs",
+          "TensorFlow",
+          "Keras"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "NLP",
+        "topics": [
+          "Text Processing",
+          "Word Embeddings",
+          "Transformers",
+          "BERT",
+          "Hugging Face"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Computer Vision",
+        "topics": [
+          "OpenCV",
+          "Image Classification",
+          "Object Detection",
+          "YOLO",
+          "GANs"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "MLOps",
+        "topics": [
+          "Model Deployment",
+          "Flask/FastAPI",
+          "Docker",
+          "MLflow",
+          "AWS SageMaker"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "LLMs & GenAI",
+        "topics": [
+          "Prompt Engineering",
+          "Fine-tuning",
+          "RAG",
+          "LangChain",
+          "OpenAI API"
+        ]
+      },
+      {
+        "month": 8,
+        "title": "Projects",
+        "topics": [
+          "End-to-End ML Project",
+          "Research Paper",
+          "Kaggle",
+          "Portfolio",
+          "GitHub"
+        ]
+      },
+      {
+        "month": 9,
+        "title": "Interview Prep",
+        "topics": [
+          "ML Interview Qs",
+          "Coding Challenges",
+          "System Design",
+          "Mock Interviews",
+          "Salary Negotiation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "uiux-designer",
+    "title": "UI/UX Designer",
+    "icon": "🎨",
+    "color": "from-pink-500 to-rose-500",
+    "description": "Design beautiful, user-centered digital experiences",
+    "avgSalary": "4-12 LPA",
+    "demand": "High",
+    "duration": "5 months",
+    "companies": [
+      "Zomato",
+      "Uber",
+      "Airbnb",
+      "Byju's",
+      "Myntra"
+    ],
+    "skills": [
+      "Figma",
+      "Adobe XD",
+      "Prototyping",
+      "User Research",
+      "Wireframing"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Design Fundamentals",
+        "topics": [
+          "Color Theory",
+          "Typography",
+          "Layout Principles",
+          "Visual Hierarchy",
+          "Design Thinking"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "UX Research",
+        "topics": [
+          "User Research",
+          "Personas",
+          "User Journey",
+          "Wireframing",
+          "Information Architecture"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "UI Design Tools",
+        "topics": [
+          "Figma Basics",
+          "Components",
+          "Auto Layout",
+          "Prototyping",
+          "Design Systems"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Advanced Design",
+        "topics": [
+          "Motion Design",
+          "Micro-interactions",
+          "Accessibility",
+          "Responsive Design",
+          "Design Critique"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Portfolio & Jobs",
+        "topics": [
+          "Case Studies",
+          "Portfolio Website",
+          "Behance",
+          "Dribbble",
+          "Interview Prep"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cloud-engineer",
+    "title": "Cloud Engineer",
+    "icon": "☁️",
+    "color": "from-sky-500 to-blue-600",
+    "description": "Design and manage scalable cloud infrastructure",
+    "avgSalary": "8-22 LPA",
+    "demand": "Very High",
+    "duration": "7 months",
+    "companies": [
+      "AWS",
+      "Microsoft",
+      "Google Cloud",
+      "IBM",
+      "Capgemini"
+    ],
+    "skills": [
+      "AWS",
+      "Azure",
+      "Docker",
+      "Kubernetes",
+      "Terraform"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Linux & Networking",
+        "topics": [
+          "Linux Commands",
+          "Shell Scripting",
+          "Networking Basics",
+          "TCP/IP",
+          "DNS"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "AWS Fundamentals",
+        "topics": [
+          "EC2",
+          "S3",
+          "IAM",
+          "VPC",
+          "Lambda"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Containers",
+        "topics": [
+          "Docker",
+          "Docker Compose",
+          "Kubernetes",
+          "Helm",
+          "Container Security"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Infrastructure as Code",
+        "topics": [
+          "Terraform",
+          "CloudFormation",
+          "Ansible",
+          "Pulumi",
+          "CDK"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "DevOps & CI/CD",
+        "topics": [
+          "Jenkins",
+          "GitHub Actions",
+          "GitLab CI",
+          "ArgoCD",
+          "Monitoring"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Security & Compliance",
+        "topics": [
+          "Cloud Security",
+          "IAM Policies",
+          "Encryption",
+          "Compliance",
+          "WAF"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Certification & Jobs",
+        "topics": [
+          "AWS SAA Prep",
+          "Mock Exams",
+          "Resume",
+          "Interview Prep",
+          "Salary Negotiation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "devops-engineer",
+    "title": "DevOps Engineer",
+    "icon": "⚙️",
+    "color": "from-amber-500 to-orange-500",
+    "description": "Bridge development and operations for faster, reliable software delivery",
+    "avgSalary": "8-20 LPA",
+    "demand": "Very High",
+    "duration": "7 months",
+    "companies": [
+      "Atlassian",
+      "HashiCorp",
+      "Red Hat",
+      "ThoughtWorks",
+      "Walmart Labs"
+    ],
+    "skills": [
+      "Jenkins",
+      "Docker",
+      "Kubernetes",
+      "Ansible",
+      "Prometheus"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Linux & Scripting",
+        "topics": [
+          "Linux Admin",
+          "Bash Scripting",
+          "Python for DevOps",
+          "Regex",
+          "Cron Jobs"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "Version Control",
+        "topics": [
+          "Git Advanced",
+          "GitFlow",
+          "Code Review",
+          "GitHub/GitLab",
+          "Monorepos"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "CI/CD",
+        "topics": [
+          "Jenkins",
+          "GitHub Actions",
+          "Pipeline as Code",
+          "Artifacts",
+          "Testing in CI"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Containers & Orchestration",
+        "topics": [
+          "Docker",
+          "Kubernetes",
+          "Helm",
+          "Service Mesh",
+          "Istio"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Monitoring & Logging",
+        "topics": [
+          "Prometheus",
+          "Grafana",
+          "ELK Stack",
+          "Alerting",
+          "SRE Principles"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Cloud & IaC",
+        "topics": [
+          "AWS/GCP",
+          "Terraform",
+          "Ansible",
+          "CloudFormation",
+          "Cost Optimization"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Interview Prep",
+        "topics": [
+          "Scenario Questions",
+          "Troubleshooting",
+          "System Design",
+          "Mock Interviews",
+          "Networking"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "python-developer",
+    "title": "Python Developer",
+    "icon": "🐍",
+    "color": "from-yellow-400 to-green-500",
+    "description": "Build versatile applications from web APIs to automation scripts",
+    "avgSalary": "5-15 LPA",
+    "demand": "High",
+    "duration": "6 months",
+    "companies": [
+      "Freshworks",
+      "Chargebee",
+      "Cleartax",
+      "Meesho",
+      "BrowserStack"
+    ],
+    "skills": [
+      "Python",
+      "Django",
+      "FastAPI",
+      "PostgreSQL",
+      "Celery"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Python Mastery",
+        "topics": [
+          "OOP in Python",
+          "Decorators",
+          "Generators",
+          "Context Managers",
+          "Advanced Collections"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "Web Frameworks",
+        "topics": [
+          "Django Basics",
+          "Django ORM",
+          "REST Framework",
+          "Authentication",
+          "Admin Panel"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "FastAPI & Async",
+        "topics": [
+          "FastAPI",
+          "Async Python",
+          "Pydantic",
+          "WebSockets",
+          "Background Tasks"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Database & Caching",
+        "topics": [
+          "PostgreSQL",
+          "SQLAlchemy",
+          "Redis",
+          "Celery",
+          "Message Queues"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Testing & DevOps",
+        "topics": [
+          "pytest",
+          "Unit Testing",
+          "Docker",
+          "CI/CD",
+          "AWS Deployment"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Projects & Interview",
+        "topics": [
+          "Full Project",
+          "Open Source",
+          "GitHub Portfolio",
+          "Mock Interviews",
+          "Resume"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cybersecurity",
+    "title": "Cybersecurity Analyst",
+    "icon": "🔐",
+    "color": "from-red-500 to-pink-600",
+    "description": "Protect systems and networks from cyber threats",
+    "avgSalary": "6-18 LPA",
+    "demand": "High",
+    "duration": "7 months",
+    "companies": [
+      "Wipro",
+      "HCL",
+      "IBM Security",
+      "Palo Alto",
+      "Check Point"
+    ],
+    "skills": [
+      "Ethical Hacking",
+      "SIEM",
+      "Penetration Testing",
+      "Cryptography",
+      "Kali Linux"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Networking Fundamentals",
+        "topics": [
+          "OSI Model",
+          "TCP/IP",
+          "DNS & DHCP",
+          "Firewalls",
+          "VPN"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "Linux & Security Basics",
+        "topics": [
+          "Kali Linux",
+          "Bash Scripting",
+          "File Permissions",
+          "Cryptography",
+          "PKI"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Ethical Hacking",
+        "topics": [
+          "OSINT",
+          "Reconnaissance",
+          "Vulnerability Scanning",
+          "Metasploit",
+          "Social Engineering"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Web Security",
+        "topics": [
+          "OWASP Top 10",
+          "SQL Injection",
+          "XSS",
+          "CSRF",
+          "Burp Suite"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "SOC & SIEM",
+        "topics": [
+          "Log Analysis",
+          "Splunk",
+          "Incident Response",
+          "Threat Hunting",
+          "Forensics"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Certifications",
+        "topics": [
+          "CEH Prep",
+          "CompTIA Security+",
+          "Practice Labs",
+          "CTF Challenges",
+          "Report Writing"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Interview Prep",
+        "topics": [
+          "Scenario Questions",
+          "Compliance",
+          "Mock Interviews",
+          "Resume",
+          "Job Search"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mobile-developer",
+    "title": "Mobile App Developer",
+    "icon": "📱",
+    "color": "from-indigo-500 to-purple-600",
+    "description": "Build cross-platform mobile apps for iOS and Android",
+    "avgSalary": "6-16 LPA",
+    "demand": "High",
+    "duration": "7 months",
+    "companies": [
+      "Ola",
+      "PhonePe",
+      "Paytm",
+      "CRED",
+      "Dream11"
+    ],
+    "skills": [
+      "React Native",
+      "Flutter",
+      "Firebase",
+      "Redux",
+      "App Store"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "JavaScript/Dart Basics",
+        "topics": [
+          "JS Advanced",
+          "Dart Basics",
+          "Async Programming",
+          "Functional Programming",
+          "Modules"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "React Native",
+        "topics": [
+          "RN Setup",
+          "Core Components",
+          "Navigation",
+          "State Management",
+          "Animations"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Flutter",
+        "topics": [
+          "Flutter Basics",
+          "Widgets",
+          "State Management",
+          "Navigation",
+          "Custom UI"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Backend Integration",
+        "topics": [
+          "REST API",
+          "Firebase",
+          "Authentication",
+          "Push Notifications",
+          "Real-time DB"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Native Features",
+        "topics": [
+          "Camera",
+          "GPS",
+          "Payments",
+          "Biometrics",
+          "Offline Storage"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Publishing",
+        "topics": [
+          "App Store",
+          "Play Store",
+          "CI/CD",
+          "Analytics",
+          "Monetization"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Interview Prep",
+        "topics": [
+          "Mobile Architecture",
+          "Performance",
+          "Mock Interviews",
+          "Portfolio",
+          "Resume"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "blockchain-developer",
+    "title": "Blockchain Developer",
+    "icon": "⛓️",
+    "color": "from-teal-500 to-cyan-600",
+    "description": "Build decentralized applications and smart contracts",
+    "avgSalary": "12-30 LPA",
+    "demand": "Growing",
+    "duration": "8 months",
+    "companies": [
+      "Polygon",
+      "WazirX",
+      "CoinDCX",
+      "Consensys",
+      "Infosys Blockchain"
+    ],
+    "skills": [
+      "Solidity",
+      "Ethereum",
+      "Web3.js",
+      "Smart Contracts",
+      "DeFi"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "Blockchain Basics",
+        "topics": [
+          "How Blockchain Works",
+          "Cryptography",
+          "Consensus Mechanisms",
+          "Bitcoin",
+          "Ethereum"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "Solidity",
+        "topics": [
+          "Solidity Basics",
+          "Data Types",
+          "Functions",
+          "Events",
+          "Inheritance"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Smart Contracts",
+        "topics": [
+          "ERC-20 Tokens",
+          "ERC-721 NFTs",
+          "DeFi Protocols",
+          "Security",
+          "Testing"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Web3.js & ethers.js",
+        "topics": [
+          "Web3 Setup",
+          "Contract Interaction",
+          "MetaMask",
+          "Transactions",
+          "Events"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "DApp Development",
+        "topics": [
+          "React + Web3",
+          "IPFS",
+          "The Graph",
+          "Hardhat",
+          "Foundry"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "DeFi & NFTs",
+        "topics": [
+          "DEX",
+          "Liquidity Pools",
+          "NFT Marketplaces",
+          "Staking",
+          "Governance"
+        ]
+      },
+      {
+        "month": 7,
+        "title": "Projects",
+        "topics": [
+          "Token Launch",
+          "DeFi Protocol",
+          "NFT Collection",
+          "DAO",
+          "Audit Practice"
+        ]
+      },
+      {
+        "month": 8,
+        "title": "Interview Prep",
+        "topics": [
+          "Smart Contract Auditing",
+          "Gas Optimization",
+          "Mock Interviews",
+          "Portfolio",
+          "Web3 Jobs"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "product-manager",
+    "title": "Product Manager",
+    "icon": "📋",
+    "color": "from-violet-500 to-purple-700",
+    "description": "Drive product strategy and lead cross-functional teams to build great products",
+    "avgSalary": "10-30 LPA",
+    "demand": "High",
+    "duration": "6 months",
+    "companies": [
+      "Razorpay",
+      "Meesho",
+      "PhonePe",
+      "Groww",
+      "Nykaa"
+    ],
+    "skills": [
+      "Product Strategy",
+      "Agile",
+      "Data Analytics",
+      "User Research",
+      "Roadmapping"
+    ],
+    "roadmap": [
+      {
+        "month": 1,
+        "title": "PM Fundamentals",
+        "topics": [
+          "Product Thinking",
+          "Agile & Scrum",
+          "User Stories",
+          "PRDs",
+          "OKRs"
+        ]
+      },
+      {
+        "month": 2,
+        "title": "User Research",
+        "topics": [
+          "User Interviews",
+          "Personas",
+          "Journey Mapping",
+          "Competitive Analysis",
+          "NPS"
+        ]
+      },
+      {
+        "month": 3,
+        "title": "Data & Analytics",
+        "topics": [
+          "Product Metrics",
+          "SQL for PMs",
+          "A/B Testing",
+          "Funnel Analysis",
+          "Cohort Analysis"
+        ]
+      },
+      {
+        "month": 4,
+        "title": "Design & Tech",
+        "topics": [
+          "Wireframing",
+          "Figma Basics",
+          "Technical Concepts",
+          "API Basics",
+          "SQL Advanced"
+        ]
+      },
+      {
+        "month": 5,
+        "title": "Strategy & Growth",
+        "topics": [
+          "Go-to-Market",
+          "Pricing",
+          "Growth Loops",
+          "Monetization",
+          "Product-Led Growth"
+        ]
+      },
+      {
+        "month": 6,
+        "title": "Interview Prep",
+        "topics": [
+          "Product Sense",
+          "Estimation",
+          "Behavioral",
+          "Mock Interviews",
+          "Case Studies"
+        ]
+      }
+    ]
+  }
+]

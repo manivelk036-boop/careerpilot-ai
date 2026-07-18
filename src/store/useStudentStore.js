@@ -62,11 +62,21 @@ export const useStudentStore = create(
           });
           if (!res.ok) {
             const errText = await res.text();
-            throw new Error(errText || 'Invalid email or password.');
+            let parsedErr;
+            try {
+              parsedErr = JSON.parse(errText);
+            } catch (e) {}
+            throw new Error(parsedErr?.error || errText || 'Invalid email or password.');
           }
           const data = await res.json();
-          set({ ...data, isLoggedIn: true });
-          return data;
+          // Store JWT token
+          if (data.token) {
+            localStorage.setItem('careerpilot_token', data.token);
+          }
+          // The student properties are nested inside data.student
+          const studentInfo = data.student || data;
+          set({ ...studentInfo, isLoggedIn: true });
+          return studentInfo;
         } catch (error) {
           toast.error(error.message || 'Login failed.');
           throw error;
@@ -74,6 +84,7 @@ export const useStudentStore = create(
       },
 
       logout: () => {
+        localStorage.removeItem('careerpilot_token');
         set({ ...initialStudent, isLoggedIn: false, isOnboarded: false });
         toast.success('Logged out successfully.');
       },
@@ -87,11 +98,19 @@ export const useStudentStore = create(
           });
           if (!res.ok) {
             const errText = await res.text();
-            throw new Error(errText || 'Registration failed.');
+            let parsedErr;
+            try {
+              parsedErr = JSON.parse(errText);
+            } catch (e) {}
+            throw new Error(parsedErr?.error || errText || 'Registration failed.');
           }
           const data = await res.json();
-          set({ ...data, isLoggedIn: true });
-          return data;
+          if (data.token) {
+            localStorage.setItem('careerpilot_token', data.token);
+          }
+          const studentInfo = data.student || data;
+          set({ ...studentInfo, isLoggedIn: true });
+          return studentInfo;
         } catch (error) {
           toast.error(error.message || 'Registration failed.');
           throw error;
@@ -102,7 +121,14 @@ export const useStudentStore = create(
         const email = get().email;
         if (!email) return;
         try {
-          const res = await fetch(`${API_URL}/student/${encodeURIComponent(email)}`);
+          const token = localStorage.getItem('careerpilot_token');
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+          const res = await fetch(`${API_URL}/student/${encodeURIComponent(email)}`, {
+            headers
+          });
           if (res.ok) {
             const data = await res.json();
             // Preserve isLoggedIn
@@ -298,9 +324,14 @@ useStudentStore.subscribe((state) => {
     if (syncTimeout) clearTimeout(syncTimeout);
     syncTimeout = setTimeout(async () => {
       try {
+        const token = localStorage.getItem('careerpilot_token');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
         await fetch(`${API_URL}/student/${encodeURIComponent(state.email)}/sync`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(state)
         });
       } catch (err) {

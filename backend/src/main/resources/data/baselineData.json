@@ -1,0 +1,788 @@
+{
+  "java-developer": {
+    "title": "Java Developer Baseline",
+    "questions": [
+      {
+        "id": "java-t1",
+        "category": "technical",
+        "subtopic": "Variables & Data Types",
+        "question": "Which of the following data types in Java is a reference type (not primitive)?",
+        "options": [
+          "int",
+          "double",
+          "String",
+          "char"
+        ],
+        "correct": 2,
+        "explanation": "String is a class in Java and is a reference type. int, double, and char are primitive types."
+      },
+      {
+        "id": "java-t2",
+        "category": "technical",
+        "subtopic": "Loops",
+        "question": "What is the output of the following Java snippet?\n\nint count = 0;\nfor (int i = 0; i < 5; i++) {\n  if (i % 2 == 0) count++;\n}\nSystem.out.println(count);",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct": 1,
+        "explanation": "The loop executes for i = 0, 1, 2, 3, 4. Even values of i are 0, 2, and 4, which increases count 3 times."
+      },
+      {
+        "id": "java-t3",
+        "category": "technical",
+        "subtopic": "Arrays",
+        "question": "How do you declare a 1D integer array in Java named \"arr\" of size 5?",
+        "options": [
+          "int arr = new int[5];",
+          "int[] arr = new int[5];",
+          "int arr[5] = new int[];",
+          "Array arr = new Array(5);"
+        ],
+        "correct": 1,
+        "explanation": "The correct syntax is \"int[] arr = new int[5];\" to allocate space for 5 integers."
+      },
+      {
+        "id": "java-t4",
+        "category": "technical",
+        "subtopic": "OOP Concepts",
+        "question": "Which OOP pillar describes hiding internal implementation details and exposing only what is necessary?",
+        "options": [
+          "Inheritance",
+          "Polymorphism",
+          "Encapsulation",
+          "Abstraction"
+        ],
+        "correct": 2,
+        "explanation": "Encapsulation bundles data and methods together and restricts direct access, hiding implementation details."
+      },
+      {
+        "id": "java-t5",
+        "category": "technical",
+        "subtopic": "SQL Basics",
+        "question": "Which SQL keyword is used to filter records based on a specific condition?",
+        "options": [
+          "ORDER BY",
+          "WHERE",
+          "HAVING",
+          "GROUP BY"
+        ],
+        "correct": 1,
+        "explanation": "The WHERE clause is used to filter records that satisfy a specified condition."
+      },
+      {
+        "id": "java-p1",
+        "category": "problemSolving",
+        "subtopic": "Logical Reasoning",
+        "question": "Find the next number in the series: 3, 6, 12, 24, 48, ...",
+        "options": [
+          "60",
+          "72",
+          "96",
+          "120"
+        ],
+        "correct": 2,
+        "explanation": "Each term in the series is multiplied by 2 to get the next term. 48 * 2 = 96."
+      },
+      {
+        "id": "java-p2",
+        "category": "problemSolving",
+        "subtopic": "Quantitative",
+        "question": "A boat can travel at 15 km/h in still water. If the speed of the current is 3 km/h, what is the speed of the boat traveling downstream?",
+        "options": [
+          "12 km/h",
+          "15 km/h",
+          "18 km/h",
+          "21 km/h"
+        ],
+        "correct": 2,
+        "explanation": "Downstream speed is Speed in still water + Speed of current = 15 + 3 = 18 km/h."
+      },
+      {
+        "id": "java-c1",
+        "category": "communication",
+        "subtopic": "Professional Writing",
+        "question": "Which of the following email subject lines is the most professional when emailing a manager about a sick day?",
+        "options": [
+          "subject: Sick today",
+          "subject: Absence Notice - [Your Name]",
+          "subject: Can't make it today, sorry!",
+          "subject: Feeling unwell"
+        ],
+        "correct": 1,
+        "explanation": "\"Absence Notice - [Your Name]\" is clear, formal, and helps the manager organize their inbox."
+      },
+      {
+        "id": "java-c2",
+        "category": "communication",
+        "subtopic": "Teamwork",
+        "question": "If a teammate has a different opinion on a database design choice, what is the best first step?",
+        "options": [
+          "Report the disagreement to the project coordinator immediately.",
+          "Implement your solution anyway and show them it is better later.",
+          "Invite them to a discussion to compare the pros and cons of both approaches.",
+          "Adopt their opinion without questioning to maintain team peace."
+        ],
+        "correct": 2,
+        "explanation": "Active listening and comparing trade-offs objectively is the best professional way to resolve technical conflicts."
+      }
+    ]
+  },
+  "fullstack-developer": {
+    "title": "Full Stack Developer Baseline",
+    "questions": [
+      {
+        "id": "fs-t1",
+        "category": "technical",
+        "subtopic": "HTML & CSS",
+        "question": "Which CSS layout model is best suited for laying out items in a single direction (either row or column)?",
+        "options": [
+          "CSS Grid",
+          "Flexbox",
+          "Block Layout",
+          "Absolute Positioning"
+        ],
+        "correct": 1,
+        "explanation": "Flexbox (Flexible Box Layout) is designed for 1-dimensional layouts (a single row or column)."
+      },
+      {
+        "id": "fs-t2",
+        "category": "technical",
+        "subtopic": "JavaScript",
+        "question": "What is the output of: console.log(typeof NaN);",
+        "options": [
+          "\"number\"",
+          "\"string\"",
+          "\"undefined\"",
+          "\"nan\""
+        ],
+        "correct": 0,
+        "explanation": "In JavaScript, NaN (Not-a-Number) is classified as a numeric data type, so typeof NaN is \"number\"."
+      },
+      {
+        "id": "fs-t3",
+        "category": "technical",
+        "subtopic": "React.js",
+        "question": "Which Hook should you use to run side-effects (like fetching data) in a React functional component?",
+        "options": [
+          "useState",
+          "useContext",
+          "useEffect",
+          "useMemo"
+        ],
+        "correct": 2,
+        "explanation": "useEffect is the standard Hook for executing side effects in functional React components."
+      },
+      {
+        "id": "fs-t4",
+        "category": "technical",
+        "subtopic": "Backend - Node.js",
+        "question": "What is the main role of middleware in an Express.js application?",
+        "options": [
+          "To serve HTML files directly.",
+          "To connect directly to the SQL server.",
+          "To execute code, modify request/response objects, and end request-response cycles.",
+          "To compile React.js files into bundles."
+        ],
+        "correct": 2,
+        "explanation": "Middleware functions have access to request and response objects, enabling request logging, authentication, and parsing before endpoints run."
+      },
+      {
+        "id": "fs-t5",
+        "category": "technical",
+        "subtopic": "Database",
+        "question": "Which database is a document-oriented NoSQL database?",
+        "options": [
+          "MySQL",
+          "PostgreSQL",
+          "MongoDB",
+          "Oracle DB"
+        ],
+        "correct": 2,
+        "explanation": "MongoDB stores records as JSON-like documents. The other options are traditional relational databases."
+      },
+      {
+        "id": "fs-p1",
+        "category": "problemSolving",
+        "subtopic": "Logical Reasoning",
+        "question": "If all dogs are loyal, and Max is a dog, which statement must be true?",
+        "options": [
+          "Max is loyal.",
+          "Max is not loyal.",
+          "Some dogs are not loyal.",
+          "Max is the only loyal dog."
+        ],
+        "correct": 0,
+        "explanation": "By deductive logic, if the premise is true that all dogs are loyal, and Max belongs to the set of dogs, then Max is loyal."
+      },
+      {
+        "id": "fs-p2",
+        "category": "problemSolving",
+        "subtopic": "Quantitative",
+        "question": "A project task takes 10 hours for 2 programmers. How long would it take 5 programmers to complete the same task working at the same speed?",
+        "options": [
+          "2 hours",
+          "4 hours",
+          "6 hours",
+          "8 hours"
+        ],
+        "correct": 1,
+        "explanation": "Total man-hours = 2 * 10 = 20 hours. Dividing this work among 5 programmers takes 20 / 5 = 4 hours."
+      },
+      {
+        "id": "fs-c1",
+        "category": "communication",
+        "subtopic": "Client Interaction",
+        "question": "A client demands a major feature change that is not in the contract. How should you respond?",
+        "options": [
+          "Refuse the change flat out and tell them it is impossible.",
+          "Agree to do it for free to keep them happy.",
+          "Acknowledge the feature value, note it is out of scope, and offer an estimate for a contract amendment.",
+          "Ignore their email and hope they forget about it."
+        ],
+        "correct": 2,
+        "explanation": "Professional client management involves acknowledging requests while clearly communicating scope boundaries and pricing options."
+      },
+      {
+        "id": "fs-c2",
+        "category": "communication",
+        "subtopic": "Clear Explanations",
+        "question": "When explaining a bug to a non-technical stakeholder, what is the best strategy?",
+        "options": [
+          "Show them raw server error logs and stack traces.",
+          "Use an analogy to explain the symptom and impact in simple business terms.",
+          "Tell them it is too complicated for them to understand.",
+          "Apologize repeatedly without explaining anything."
+        ],
+        "correct": 1,
+        "explanation": "Translating complex errors into simple analogies helps stakeholders understand project risks and timelines without confusion."
+      }
+    ]
+  },
+  "uiux-designer": {
+    "title": "UI/UX Designer Baseline",
+    "questions": [
+      {
+        "id": "uiux-t1",
+        "category": "technical",
+        "subtopic": "Design Fundamentals",
+        "question": "Which font style is generally preferred for body text in digital user interfaces for better legibility?",
+        "options": [
+          "Serif fonts (like Times New Roman)",
+          "Sans-serif fonts (like Inter or Roboto)",
+          "Script/Handwritten fonts",
+          "Monospace fonts"
+        ],
+        "correct": 1,
+        "explanation": "Sans-serif fonts are cleaner on screens and generally easier to read at small sizes than serif fonts."
+      },
+      {
+        "id": "uiux-t2",
+        "category": "technical",
+        "subtopic": "UX Research",
+        "question": "What is the primary purpose of creating a User Persona?",
+        "options": [
+          "To draft an employee hiring target.",
+          "To represent a key group of target users with realistic goals, pain points, and behaviors.",
+          "To test the website responsive layout breakpoints.",
+          "To document client contact information."
+        ],
+        "correct": 1,
+        "explanation": "User Personas represent user archetypes, keeping the design team centered on real user needs."
+      },
+      {
+        "id": "uiux-t3",
+        "category": "technical",
+        "subtopic": "UI Design Tools",
+        "question": "In Figma, which feature allows you to create responsive cards that stretch and wrap based on screen width?",
+        "options": [
+          "Masking",
+          "Constraints",
+          "Auto Layout",
+          "Union Selection"
+        ],
+        "correct": 2,
+        "explanation": "Auto Layout organizes components dynamically, making layouts responsive and flexible."
+      },
+      {
+        "id": "uiux-t4",
+        "category": "technical",
+        "subtopic": "Advanced Design",
+        "question": "What does accessibility (WCAG) contrast ratio ensure in UI design?",
+        "options": [
+          "That files export quickly.",
+          "That text has enough color contrast against its background to be readable by users with low vision.",
+          "That images have smooth gradients.",
+          "That web pages load under 2 seconds."
+        ],
+        "correct": 1,
+        "explanation": "WCAG contrast standards ensure that visual content is accessible to visually impaired users."
+      },
+      {
+        "id": "uiux-t5",
+        "category": "technical",
+        "subtopic": "Design Fundamentals",
+        "question": "Which rule describes using 60% dominant color, 30% secondary color, and 10% accent color to maintain harmony?",
+        "options": [
+          "60-30-10 Color Rule",
+          "Golden Ratio Rule",
+          "Rule of Thirds",
+          "Venn Design Principle"
+        ],
+        "correct": 0,
+        "explanation": "The 60-30-10 rule is a classic guideline for distributing color weights in layouts balanced visually."
+      },
+      {
+        "id": "uiux-p1",
+        "category": "problemSolving",
+        "subtopic": "User Flows",
+        "question": "A user lands on a checkout page. There are 10 form fields, 3 popups, and 2 banner ads. What will likely happen?",
+        "options": [
+          "The user will checkout faster.",
+          "The user will experience cognitive overload and potentially abandon the checkout.",
+          "The conversion rate will double.",
+          "The user will click all ads."
+        ],
+        "correct": 1,
+        "explanation": "Cluttered screens cause cognitive fatigue and distraction, leading to high abandonment rates. Keep it simple."
+      },
+      {
+        "id": "uiux-p2",
+        "category": "problemSolving",
+        "subtopic": "A/B Testing",
+        "question": "If you want to know whether a Red button or a Blue button gets more clicks, what is the best method?",
+        "options": [
+          "Ask the CEO which one they prefer.",
+          "Launch an A/B test exposing half of the users to Red and half to Blue.",
+          "Use both colors on the same screen.",
+          "Read design history articles."
+        ],
+        "correct": 1,
+        "explanation": "A/B testing is the standard quantitative user research method to compare two interface variants."
+      },
+      {
+        "id": "uiux-c1",
+        "category": "communication",
+        "subtopic": "Design Critique",
+        "question": "A developer says your mobile design is impossible to code within the schedule. How should you react?",
+        "options": [
+          "Tell them they are incompetent developers.",
+          "Insist on the design anyway and complain to management.",
+          "Sit with the developer to understand the technical limitation and find a simplified design compromise.",
+          "Throw away the mobile designs completely."
+        ],
+        "correct": 2,
+        "explanation": "Collaborating to find a trade-off is the hallmark of a professional team designer."
+      },
+      {
+        "id": "uiux-c2",
+        "category": "communication",
+        "subtopic": "User Empathy",
+        "question": "During a user test, a user struggles to find the \"Cart\" button. What should you conclude?",
+        "options": [
+          "The user is not tech-savvy enough.",
+          "The user is not paying attention.",
+          "The button design or placement lacks visibility and needs layout optimization.",
+          "The user test was set up incorrectly."
+        ],
+        "correct": 2,
+        "explanation": "User testing is about uncovering design flaws. If a user cannot find a key element, the design is at fault, not the user."
+      }
+    ]
+  },
+  "data-analyst": {
+    "title": "Data Analyst Baseline",
+    "questions": [
+      {
+        "id": "da-t1",
+        "category": "technical",
+        "subtopic": "Excel",
+        "question": "Which Excel function is used to search for a value in the leftmost column of a table and return a value in the same row?",
+        "options": [
+          "INDEX",
+          "MATCH",
+          "VLOOKUP",
+          "IF"
+        ],
+        "correct": 2,
+        "explanation": "VLOOKUP searches down the first column of a table to retrieve data in a specified column in the matching row."
+      },
+      {
+        "id": "da-t2",
+        "category": "technical",
+        "subtopic": "SQL Basics",
+        "question": "Which clause is used to filter records after an aggregation (GROUP BY) has been applied in SQL?",
+        "options": [
+          "WHERE",
+          "HAVING",
+          "ORDER BY",
+          "LIMIT"
+        ],
+        "correct": 1,
+        "explanation": "HAVING filters grouped aggregates. WHERE filters rows before grouping."
+      },
+      {
+        "id": "da-t3",
+        "category": "technical",
+        "subtopic": "Statistics",
+        "question": "In a skewed distribution where a few extremely high values pull the average up, which metric represents the central tendency best?",
+        "options": [
+          "Mean",
+          "Median",
+          "Mode",
+          "Range"
+        ],
+        "correct": 1,
+        "explanation": "The median is robust against extreme outliers, representing central tendency better than mean in skewed datasets."
+      },
+      {
+        "id": "da-t4",
+        "category": "technical",
+        "subtopic": "Python Basics",
+        "question": "Which Python library is primarily used for structured data manipulation and dataframes?",
+        "options": [
+          "NumPy",
+          "Pandas",
+          "matplotlib",
+          "scikit-learn"
+        ],
+        "correct": 1,
+        "explanation": "Pandas provides high-performance data structures like DataFrames for cleaning and analyzing tabular data."
+      },
+      {
+        "id": "da-t5",
+        "category": "technical",
+        "subtopic": "Data Visualization",
+        "question": "Which chart type is best suited to show relationships or correlation between two numerical variables?",
+        "options": [
+          "Bar Chart",
+          "Pie Chart",
+          "Scatter Plot",
+          "Line Chart"
+        ],
+        "correct": 2,
+        "explanation": "Scatter plots map individual coordinates on x and y axes, highlighting correlations clearly."
+      },
+      {
+        "id": "da-p1",
+        "category": "problemSolving",
+        "subtopic": "Logical Reasoning",
+        "question": "A company increases sales by 10% in Year 1 and 20% in Year 2. What is the total compound increase?",
+        "options": [
+          "30%",
+          "32%",
+          "35%",
+          "40%"
+        ],
+        "correct": 1,
+        "explanation": "If initial sales are 100, Year 1 sales = 110. Year 2 sales = 110 * 1.2 = 132. Total increase = 32%."
+      },
+      {
+        "id": "da-p2",
+        "category": "problemSolving",
+        "subtopic": "Probability",
+        "question": "If you roll a fair six-sided die, what is the probability of rolling an even number?",
+        "options": [
+          "1/6",
+          "1/3",
+          "1/2",
+          "2/3"
+        ],
+        "correct": 2,
+        "explanation": "Even numbers are 2, 4, 6 (3 outcomes out of 6). Probability = 3/6 = 1/2."
+      },
+      {
+        "id": "da-c1",
+        "category": "communication",
+        "subtopic": "Data Presentation",
+        "question": "You must present sales insights to executives. What is the best slide design approach?",
+        "options": [
+          "Copy-paste the complete SQL query and code to prove you did the work.",
+          "Show a massive table with 10,000 cells of raw logs.",
+          "Highlight 3 key metrics with clear charts and bullet points summarizing the business impact.",
+          "Read from a scripted text report."
+        ],
+        "correct": 2,
+        "explanation": "Executives need digestible, high-level summaries highlighting business implications, not raw code."
+      },
+      {
+        "id": "da-c2",
+        "category": "communication",
+        "subtopic": "Business Ethics",
+        "question": "Your analysis shows a new product launch is failing, but your manager wants you to hide the negative metrics. What do you do?",
+        "options": [
+          "Change the metrics to make the launch look successful.",
+          "Present the data accurately, highlighting both successes and failure points with suggestions for recovery.",
+          "Refuse to do any more work and walk out.",
+          "Email the CEO directly to complain about your manager."
+        ],
+        "correct": 1,
+        "explanation": "A data analyst must maintain data integrity while presenting findings constructively with recommendations."
+      }
+    ]
+  },
+  "ai-engineer": {
+    "title": "AI/ML Engineer Baseline",
+    "questions": [
+      {
+        "id": "ai-t1",
+        "category": "technical",
+        "subtopic": "Python",
+        "question": "In Python, which list comprehension creates a list of squares of even numbers from 0 to 9?",
+        "options": [
+          "[x*2 for x in range(10) if x % 2 == 0]",
+          "[x**2 for x in range(10) if x % 2 == 0]",
+          "[x*x for x in range(10) if x % 2 != 0]",
+          "[x^2 for x in range(10)]"
+        ],
+        "correct": 1,
+        "explanation": "\"**\" is the exponentiation operator in Python. range(10) runs from 0 to 9."
+      },
+      {
+        "id": "ai-t2",
+        "category": "technical",
+        "subtopic": "Mathematics",
+        "question": "In linear algebra, if matrix A has dimensions 3x2 and matrix B has dimensions 2x4, what is the dimension of the product matrix AB?",
+        "options": [
+          "3x4",
+          "2x2",
+          "3x2",
+          "Impossible to multiply"
+        ],
+        "correct": 0,
+        "explanation": "Multiplication of (m x n) and (n x p) matrices yields an (m x p) matrix. Here, (3x2) * (2x4) = 3x4."
+      },
+      {
+        "id": "ai-t3",
+        "category": "technical",
+        "subtopic": "Data Structures",
+        "question": "Which data structure follows the Last-In, First-Out (LIFO) access model?",
+        "options": [
+          "Queue",
+          "Stack",
+          "Linked List",
+          "Binary Tree"
+        ],
+        "correct": 1,
+        "explanation": "A stack is a LIFO structure. Queues are FIFO (First-In, First-Out)."
+      },
+      {
+        "id": "ai-t4",
+        "category": "technical",
+        "subtopic": "Machine Learning Basics",
+        "question": "What is the main objective of Supervised Learning?",
+        "options": [
+          "To group similar data points without labels.",
+          "To learn mapping functions from input variables to labeled output variables.",
+          "To train a robot through reward and punishment feedback loops.",
+          "To build responsive HTML frontends."
+        ],
+        "correct": 1,
+        "explanation": "Supervised learning trains models on labeled input-output datasets to predict labels for new data."
+      },
+      {
+        "id": "ai-t5",
+        "category": "technical",
+        "subtopic": "Probability & Statistics",
+        "question": "Which of the following describes overfitting in machine learning?",
+        "options": [
+          "The model performs poorly on both training and test data.",
+          "The model performs well on training data but poorly on unseen test data.",
+          "The model parameters are too small.",
+          "The training dataset is too small."
+        ],
+        "correct": 1,
+        "explanation": "Overfitting occurs when a model learns noise and details in training data so much that it hurts generalization on new data."
+      },
+      {
+        "id": "ai-p1",
+        "category": "problemSolving",
+        "subtopic": "Algorithm Analysis",
+        "question": "What is the time complexity of searching for an element in a sorted array of size N using Binary Search?",
+        "options": [
+          "O(1)",
+          "O(log N)",
+          "O(N)",
+          "O(N log N)"
+        ],
+        "correct": 1,
+        "explanation": "Binary search splits the search space in half with each step, yielding a logarithmic time complexity of O(log N)."
+      },
+      {
+        "id": "ai-p2",
+        "category": "problemSolving",
+        "subtopic": "Quantitative",
+        "question": "A coin is tossed 3 times. What is the probability of getting exactly 2 heads?",
+        "options": [
+          "1/8",
+          "3/8",
+          "1/2",
+          "5/8"
+        ],
+        "correct": 1,
+        "explanation": "Total outcomes = 2^3 = 8. Outcomes with 2 Heads: HHT, HTH, THH (3 outcomes). Probability = 3/8."
+      },
+      {
+        "id": "ai-c1",
+        "category": "communication",
+        "subtopic": "Research Reporting",
+        "question": "You implemented a model that improves accuracy by 2% but increases server costs by 500%. How do you report this to stakeholders?",
+        "options": [
+          "Report only the 2% accuracy boost and omit the server cost increase.",
+          "Present both metrics clearly, explaining the trade-offs and recommending whether the business benefits justify the cost.",
+          "Refuse to share the cost metric since it makes your model look bad.",
+          "Deploy the model quietly without asking anyone."
+        ],
+        "correct": 1,
+        "explanation": "Professional reporting requires transparency about costs and benefits so stakeholders can make business-viable decisions."
+      },
+      {
+        "id": "ai-c2",
+        "category": "communication",
+        "subtopic": "Technical Speaking",
+        "question": "How do you explain \"Neural Network weights\" to a client with no math background?",
+        "options": [
+          "Say: \"They are coefficient matrices evaluated during backpropagation gradient descent.\"",
+          "Say: \"Think of them as knobs that the model turns to adjust how much it listens to different input clues.\"",
+          "Tell them they do not need to know the details.",
+          "Use complex equations."
+        ],
+        "correct": 1,
+        "explanation": "Simplifying weights as \"adjustable knobs or clues filter\" conveys the intuitive concept without alienating the client with jargon."
+      }
+    ]
+  },
+  "default": {
+    "title": "Career Assessment Baseline",
+    "questions": [
+      {
+        "id": "def-t1",
+        "category": "technical",
+        "subtopic": "Programming Basics",
+        "question": "Which of the following is a conditional control structure used to make decisions in code?",
+        "options": [
+          "for loop",
+          "while loop",
+          "if-else statement",
+          "function call"
+        ],
+        "correct": 2,
+        "explanation": "if-else statements evaluate boolean expressions to branch execution paths, making decisions."
+      },
+      {
+        "id": "def-t2",
+        "category": "technical",
+        "subtopic": "Data Structures",
+        "question": "Which data structure is indexed starting at 0 and stores elements in contiguous memory slots?",
+        "options": [
+          "Array",
+          "Stack",
+          "Queue",
+          "Hash Map"
+        ],
+        "correct": 0,
+        "explanation": "Arrays store elements sequentially, allowing constant-time O(1) retrieval using integer indices starting at 0."
+      },
+      {
+        "id": "def-t3",
+        "category": "technical",
+        "subtopic": "Web Basics",
+        "question": "Which language is used to structure and add semantic meaning to contents of a web page?",
+        "options": [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "SQL"
+        ],
+        "correct": 0,
+        "explanation": "HTML (HyperText Markup Language) defines page structure. CSS defines style, and JavaScript defines interactive logic."
+      },
+      {
+        "id": "def-t4",
+        "category": "technical",
+        "subtopic": "Database Basics",
+        "question": "What is a Primary Key in relational databases?",
+        "options": [
+          "A key to encrypt database columns.",
+          "A column containing values that uniquely identify each row in a table.",
+          "A password to access the database.",
+          "A key that links to another table."
+        ],
+        "correct": 1,
+        "explanation": "A Primary Key uniquely identifies database records. It cannot contain duplicates or null values."
+      },
+      {
+        "id": "def-t5",
+        "category": "technical",
+        "subtopic": "Git Version Control",
+        "question": "Which Git command is used to save staged changes locally with a descriptive message?",
+        "options": [
+          "git push",
+          "git commit -m \"message\"",
+          "git add",
+          "git pull"
+        ],
+        "correct": 1,
+        "explanation": "git commit saves staged file snapshots locally. git add stages files, and git push uploads them to remote servers."
+      },
+      {
+        "id": "def-p1",
+        "category": "problemSolving",
+        "subtopic": "Logical Reasoning",
+        "question": "If a clock shows 3:15, what is the angle between the hour and minute hands?",
+        "options": [
+          "0 degrees",
+          "7.5 degrees",
+          "15 degrees",
+          "22.5 degrees"
+        ],
+        "correct": 1,
+        "explanation": "At 15 minutes, the minute hand is at 90°. The hour hand moves 0.5° per minute, so at 15 minutes it is at (3 * 30) + (15 * 0.5) = 97.5°. Angle = 7.5°."
+      },
+      {
+        "id": "def-p2",
+        "category": "problemSolving",
+        "subtopic": "Quantitative",
+        "question": "An item is sold for ₹120 at a profit of 20%. What was the cost price?",
+        "options": [
+          "₹96",
+          "₹100",
+          "₹105",
+          "₹110"
+        ],
+        "correct": 1,
+        "explanation": "SP = CP * 1.2. Here 120 = CP * 1.2, so CP = 120 / 1.2 = ₹100."
+      },
+      {
+        "id": "def-c1",
+        "category": "communication",
+        "subtopic": "Situational Writing",
+        "question": "You made a mistake that caused the app to crash for 5 minutes. How should you notify your team?",
+        "options": [
+          "Blame the server host provider to save your reputation.",
+          "Stay silent and hope no one notices.",
+          "Send a message explaining the issue, noting you have fixed it, and detail steps to prevent it happening again.",
+          "Apologize repeatedly in chat without explaining what happened."
+        ],
+        "correct": 2,
+        "explanation": "Accountability, clarity on fix status, and prevention details represent professional post-incident communication."
+      },
+      {
+        "id": "def-c2",
+        "category": "communication",
+        "subtopic": "Meetings",
+        "question": "During a sprint planning meeting, what is the best active listening behavior?",
+        "options": [
+          "Multi-tasking and writing unrelated code.",
+          "Interrupting team members to make sure your points are heard first.",
+          "Focusing on speakers, taking notes on action items, and asking clarifying questions about tasks.",
+          "Agreeing to all deadlines immediately without checking your calendar."
+        ],
+        "correct": 2,
+        "explanation": "Focus, active note-taking, and selective clarification represent professional team collaboration."
+      }
+    ]
+  }
+}

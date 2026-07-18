@@ -1,0 +1,311 @@
+{
+  "java-developer": [
+    {
+      "id": "java-variables",
+      "title": "Variables & Data Types",
+      "icon": "📦",
+      "duration": "45 min",
+      "notes": "# Java Variables & Data Types\n\n## What is a Variable?\nA variable is a named memory location that stores data.\n\n## Primitive Types\n- **int** — whole numbers (-2B to 2B)\n- **double** — decimal numbers\n- **char** — single character ('A')\n- **boolean** — true / false\n- **long** — large whole numbers\n- **float** — small decimal numbers\n\n## Declaring Variables\n```java\nint age = 20;\ndouble gpa = 8.5;\nString name = \"Arjun\"; // String is a class, not primitive\nboolean isPlaced = false;\n```\n\n## Type Casting\n```java\nint x = 10;\ndouble y = (double) x; // explicit cast\n```\n\n## Key Rules\n- Variable names are case-sensitive\n- Start with letter, _ or $\n- Cannot use reserved keywords\n",
+      "videoUrl": "https://www.youtube.com/embed/eIrMbAQSU34",
+      "practiceQuestions": [
+        {
+          "q": "Declare an int variable called score with value 95",
+          "hint": "int score = 95;"
+        },
+        {
+          "q": "Declare a double variable for CGPA with value 8.5",
+          "hint": "double cgpa = 8.5;"
+        },
+        {
+          "q": "Cast a double 9.7 to int — what is the result?",
+          "hint": "9 (decimal truncated)"
+        }
+      ],
+      "assignment": "Write a Java program that declares variables for your name, age, CGPA, and department. Print all of them using System.out.println."
+    },
+    {
+      "id": "java-loops",
+      "title": "Control Flow & Loops",
+      "icon": "🔄",
+      "duration": "60 min",
+      "notes": "# Control Flow & Loops\n\n## if-else\n```java\nif (score >= 90) {\n  System.out.println(\"A Grade\");\n} else if (score >= 75) {\n  System.out.println(\"B Grade\");\n} else {\n  System.out.println(\"C Grade\");\n}\n```\n\n## for loop\n```java\nfor (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}\n```\n\n## while loop\n```java\nint i = 1;\nwhile (i <= 10) {\n  System.out.println(i);\n  i++;\n}\n```\n\n## do-while loop\n```java\ndo {\n  System.out.println(\"runs at least once\");\n} while (false);\n```\n\n## Enhanced for (for-each)\n```java\nint[] arr = {1, 2, 3, 4, 5};\nfor (int num : arr) {\n  System.out.println(num);\n}\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/a3_7LcNHmsc",
+      "practiceQuestions": [
+        {
+          "q": "Write a for loop that prints numbers 1 to 10",
+          "hint": "for(int i=1;i<=10;i++) System.out.println(i);"
+        },
+        {
+          "q": "Write a while loop that prints even numbers from 2 to 20",
+          "hint": "while(i<=20){ if(i%2==0) print(i); i++; }"
+        },
+        {
+          "q": "What is the difference between break and continue?",
+          "hint": "break exits loop; continue skips current iteration"
+        }
+      ],
+      "assignment": "Write a program to print the multiplication table of any number entered by the user using a for loop."
+    },
+    {
+      "id": "java-oop",
+      "title": "OOP Concepts",
+      "icon": "🧱",
+      "duration": "90 min",
+      "notes": "# Object-Oriented Programming\n\n## Class and Object\n```java\nclass Student {\n  String name;\n  int age;\n  \n  void study() {\n    System.out.println(name + \" is studying\");\n  }\n}\n\nStudent s = new Student();\ns.name = \"Arjun\";\ns.study();\n```\n\n## Inheritance\n```java\nclass Animal {\n  void speak() { System.out.println(\"...\"); }\n}\nclass Dog extends Animal {\n  void speak() { System.out.println(\"Woof!\"); }\n}\n```\n\n## Encapsulation\n- Private fields + public getters/setters\n\n## Polymorphism\n- Same method, different behavior based on object type\n\n## Abstraction\n- Abstract classes and Interfaces\n",
+      "videoUrl": "https://www.youtube.com/embed/7GwptabrYyk",
+      "practiceQuestions": [
+        {
+          "q": "Create a class Car with brand, speed fields and a drive() method",
+          "hint": "class Car { String brand; int speed; void drive(){...} }"
+        },
+        {
+          "q": "What is the difference between abstract class and interface?",
+          "hint": "Abstract class can have concrete methods; interface (pre-Java8) only abstract methods"
+        },
+        {
+          "q": "Demonstrate method overriding with a simple example",
+          "hint": "Parent class method is overridden in child class with @Override"
+        }
+      ],
+      "assignment": "Design a banking system with classes: Account, SavingsAccount (extends Account), with deposit and withdraw methods."
+    },
+    {
+      "id": "java-collections",
+      "title": "Collections Framework",
+      "icon": "📚",
+      "duration": "75 min",
+      "notes": "# Java Collections Framework\n\n## ArrayList\n```java\nList<String> list = new ArrayList<>();\nlist.add(\"Java\");\nlist.add(\"Python\");\nSystem.out.println(list.get(0)); // Java\n```\n\n## HashMap\n```java\nMap<String, Integer> map = new HashMap<>();\nmap.put(\"Alice\", 90);\nmap.put(\"Bob\", 85);\nSystem.out.println(map.get(\"Alice\")); // 90\n```\n\n## HashSet\n```java\nSet<Integer> set = new HashSet<>();\nset.add(1); set.add(2); set.add(1); // duplicates ignored\nSystem.out.println(set.size()); // 2\n```\n\n## Iterating\n```java\nfor (Map.Entry<String, Integer> entry : map.entrySet()) {\n  System.out.println(entry.getKey() + \" -> \" + entry.getValue());\n}\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/GdAon80-0KA",
+      "practiceQuestions": [
+        {
+          "q": "Create an ArrayList and add 5 student names, then remove the 3rd one",
+          "hint": "list.remove(2) removes index 2"
+        },
+        {
+          "q": "Use HashMap to store student name → marks and print the highest scorer",
+          "hint": "Iterate entries and track max value"
+        },
+        {
+          "q": "What is the difference between ArrayList and LinkedList?",
+          "hint": "ArrayList: fast random access; LinkedList: fast insertion/deletion"
+        }
+      ],
+      "assignment": "Build a student grade tracker using HashMap<String, List<Integer>> where each student has multiple subject scores."
+    },
+    {
+      "id": "java-sql",
+      "title": "SQL Basics",
+      "icon": "🗄️",
+      "duration": "60 min",
+      "notes": "# SQL for Java Developers\n\n## Core Commands\n```sql\n-- Create table\nCREATE TABLE students (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  name VARCHAR(100),\n  cgpa DECIMAL(3,2)\n);\n\n-- Insert\nINSERT INTO students (name, cgpa) VALUES ('Arjun', 8.5);\n\n-- Select\nSELECT * FROM students WHERE cgpa > 8.0 ORDER BY cgpa DESC;\n\n-- Update\nUPDATE students SET cgpa = 9.0 WHERE name = 'Arjun';\n\n-- Delete\nDELETE FROM students WHERE id = 1;\n```\n\n## Joins\n```sql\nSELECT s.name, c.course_name\nFROM students s\nINNER JOIN enrollments e ON s.id = e.student_id\nINNER JOIN courses c ON e.course_id = c.id;\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/HXV3zeQKqGY",
+      "practiceQuestions": [
+        {
+          "q": "Write SQL to find all students with CGPA above 8.0",
+          "hint": "SELECT * FROM students WHERE cgpa > 8.0"
+        },
+        {
+          "q": "Write a JOIN query to get student names with their course names",
+          "hint": "INNER JOIN between students and courses table"
+        },
+        {
+          "q": "What is the difference between WHERE and HAVING?",
+          "hint": "WHERE filters rows; HAVING filters groups after GROUP BY"
+        }
+      ],
+      "assignment": "Design a database for a college library: Books table, Members table, and Borrowing history table. Write 5 SQL queries."
+    }
+  ],
+  "data-analyst": [
+    {
+      "id": "da-python",
+      "title": "Python for Data Analysis",
+      "icon": "🐍",
+      "duration": "60 min",
+      "notes": "# Python for Data Analysis\n\n## NumPy Basics\n```python\nimport numpy as np\narr = np.array([1, 2, 3, 4, 5])\nprint(arr.mean())  # 3.0\nprint(arr.std())   # 1.41\n```\n\n## Pandas Basics\n```python\nimport pandas as pd\ndf = pd.read_csv('data.csv')\ndf.head()          # first 5 rows\ndf.describe()      # statistics\ndf.info()          # column types\ndf.isnull().sum()  # missing values\n```\n\n## Data Cleaning\n```python\ndf.dropna()        # remove missing rows\ndf.fillna(0)       # fill with 0\ndf['col'].str.strip()  # remove spaces\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/r-uOLxNrNk8",
+      "practiceQuestions": [
+        {
+          "q": "Load a CSV file and print the first 5 rows",
+          "hint": "pd.read_csv(\"file.csv\").head()"
+        },
+        {
+          "q": "Find columns with missing values",
+          "hint": "df.isnull().sum()"
+        },
+        {
+          "q": "Calculate mean and median of a column",
+          "hint": "df[\"col\"].mean(), df[\"col\"].median()"
+        }
+      ],
+      "assignment": "Load the Titanic dataset, clean missing values, and produce a summary of survival rates by passenger class."
+    },
+    {
+      "id": "da-sql",
+      "title": "SQL for Data Analysis",
+      "icon": "🗄️",
+      "duration": "75 min",
+      "notes": "# SQL for Data Analysts\n\n## Aggregations\n```sql\nSELECT department, COUNT(*) as total, AVG(salary) as avg_salary\nFROM employees\nGROUP BY department\nHAVING AVG(salary) > 50000\nORDER BY avg_salary DESC;\n```\n\n## Window Functions\n```sql\nSELECT name, salary,\n  RANK() OVER (PARTITION BY dept ORDER BY salary DESC) as rank\nFROM employees;\n```\n\n## Subqueries\n```sql\nSELECT name FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/7S_tz1z_5bA",
+      "practiceQuestions": [
+        {
+          "q": "Find the top 3 highest earning employees per department",
+          "hint": "Use RANK() OVER (PARTITION BY dept ORDER BY salary DESC)"
+        },
+        {
+          "q": "Write a query to find month-wise sales totals",
+          "hint": "GROUP BY MONTH(date), SUM(amount)"
+        },
+        {
+          "q": "What is a CTE (Common Table Expression)?",
+          "hint": "WITH cte AS (SELECT ...) SELECT * FROM cte"
+        }
+      ],
+      "assignment": "Given a sales database, write 5 analytical queries: monthly trends, top products, regional comparison, customer segments, YoY growth."
+    },
+    {
+      "id": "da-visualization",
+      "title": "Data Visualization",
+      "icon": "📊",
+      "duration": "60 min",
+      "notes": "# Data Visualization with Python\n\n## Matplotlib\n```python\nimport matplotlib.pyplot as plt\nplt.plot([1,2,3], [4,5,6])\nplt.title('My Chart')\nplt.xlabel('X')\nplt.ylabel('Y')\nplt.show()\n```\n\n## Seaborn\n```python\nimport seaborn as sns\nsns.heatmap(df.corr(), annot=True)\nsns.boxplot(x='category', y='value', data=df)\n```\n\n## Chart Types\n- **Bar chart** — comparisons\n- **Line chart** — trends over time\n- **Scatter plot** — correlation\n- **Heatmap** — correlation matrix\n- **Box plot** — distribution + outliers\n",
+      "videoUrl": "https://www.youtube.com/embed/UO98lJQ3QGI",
+      "practiceQuestions": [
+        {
+          "q": "Create a bar chart of top 5 countries by population",
+          "hint": "plt.bar(countries, populations)"
+        },
+        {
+          "q": "Create a heatmap showing correlation of numeric columns",
+          "hint": "sns.heatmap(df.corr(), annot=True)"
+        },
+        {
+          "q": "When would you use a box plot vs histogram?",
+          "hint": "Box plot: outliers & quartiles; Histogram: frequency distribution"
+        }
+      ],
+      "assignment": "Create a complete EDA (Exploratory Data Analysis) notebook on a dataset of your choice with at least 5 different chart types."
+    }
+  ],
+  "ai-engineer": [
+    {
+      "id": "ai-python",
+      "title": "Python & Math for AI",
+      "icon": "🔢",
+      "duration": "90 min",
+      "notes": "# Python & Mathematics for AI\n\n## Linear Algebra Essentials\n- Vectors, Matrices, Dot products\n- Matrix multiplication → core of neural networks\n\n```python\nimport numpy as np\nA = np.array([[1,2],[3,4]])\nB = np.array([[5,6],[7,8]])\nprint(np.dot(A, B)) # Matrix multiplication\n```\n\n## Calculus Concepts\n- Derivatives → gradient descent\n- Partial derivatives → backpropagation\n\n## Probability\n```python\nimport numpy as np\n# Normal distribution\nsamples = np.random.normal(mean=0, std=1, size=1000)\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/aircAruvnKk",
+      "practiceQuestions": [
+        {
+          "q": "Compute dot product of [1,2,3] and [4,5,6]",
+          "hint": "np.dot([1,2,3],[4,5,6]) = 32"
+        },
+        {
+          "q": "What is a gradient and why is it important in ML?",
+          "hint": "Gradient = direction of steepest ascent; used in gradient descent to minimize loss"
+        },
+        {
+          "q": "Explain the difference between mean and median",
+          "hint": "Mean: average; Median: middle value; Median is robust to outliers"
+        }
+      ],
+      "assignment": "Implement gradient descent from scratch in Python to minimize f(x) = x² and find the minimum."
+    },
+    {
+      "id": "ai-ml",
+      "title": "Machine Learning Fundamentals",
+      "icon": "🤖",
+      "duration": "120 min",
+      "notes": "# Machine Learning Fundamentals\n\n## Types of ML\n- **Supervised** — labeled data (regression, classification)\n- **Unsupervised** — unlabeled data (clustering)\n- **Reinforcement** — reward-based learning\n\n## Scikit-learn\n```python\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import mean_squared_error\n\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\n```\n\n## Model Evaluation\n- **Accuracy** — for classification\n- **MSE/RMSE** — for regression\n- **Confusion Matrix** — TP, TN, FP, FN\n- **Cross-validation** — prevent overfitting\n",
+      "videoUrl": "https://www.youtube.com/embed/Gv9_4yMHFhI",
+      "practiceQuestions": [
+        {
+          "q": "What is overfitting and how do you prevent it?",
+          "hint": "Model memorizes training data; prevent with regularization, dropout, cross-validation"
+        },
+        {
+          "q": "Explain the bias-variance tradeoff",
+          "hint": "High bias = underfitting; High variance = overfitting; Goal: balance both"
+        },
+        {
+          "q": "When would you use Random Forest over Logistic Regression?",
+          "hint": "RF: non-linear data, feature importance needed; LR: linearly separable, interpretability needed"
+        }
+      ],
+      "assignment": "Build a spam email classifier using Naive Bayes on the SMS Spam Collection dataset. Report accuracy, precision, recall."
+    }
+  ],
+  "uiux-designer": [
+    {
+      "id": "uiux-fundamentals",
+      "title": "Design Fundamentals",
+      "icon": "🎨",
+      "duration": "60 min",
+      "notes": "# Design Fundamentals\n\n## Color Theory\n- **Primary** colors: Red, Blue, Yellow (pigment) / Red, Green, Blue (light)\n- **Complementary** colors: opposite on color wheel (high contrast)\n- **Analogous** colors: adjacent on wheel (harmonious)\n- **60-30-10 Rule**: 60% dominant, 30% secondary, 10% accent\n\n## Typography\n- **Serif** — formal, print (Times New Roman)\n- **Sans-serif** — modern, screen (Inter, Roboto)\n- **Font pairing**: heading + body should contrast\n- **Type scale**: 12, 14, 16, 20, 24, 32, 48px\n\n## Visual Hierarchy\n- Size → bigger = more important\n- Color → contrast draws attention\n- Whitespace → breathing room\n- Position → F-pattern reading\n\n## 8px Grid System\n- All spacing multiples of 8: 8, 16, 24, 32, 48px\n",
+      "videoUrl": "https://www.youtube.com/embed/YqQx75OPRa0",
+      "practiceQuestions": [
+        {
+          "q": "What color combination would work for a finance app?",
+          "hint": "Blue (trust) + white (clean) + green (growth) — avoid red (danger)"
+        },
+        {
+          "q": "Name 3 principles of visual hierarchy",
+          "hint": "Size contrast, color contrast, spacing/whitespace"
+        },
+        {
+          "q": "What font would you use for a medical app and why?",
+          "hint": "Sans-serif (Inter, Roboto) — clean, readable, professional"
+        }
+      ],
+      "assignment": "Create a mood board for a food delivery app redesign. Define color palette, typography, and spacing system."
+    },
+    {
+      "id": "uiux-figma",
+      "title": "Figma & Prototyping",
+      "icon": "🖼️",
+      "duration": "90 min",
+      "notes": "# Figma Essentials\n\n## Key Concepts\n- **Frames** — artboards / screen containers\n- **Components** — reusable UI elements\n- **Auto Layout** — responsive spacing (like flexbox)\n- **Variants** — multiple states of a component\n- **Prototype** — clickable interactions\n\n## Auto Layout\n- Direction: horizontal / vertical\n- Gap between items: fixed or auto\n- Padding: top/right/bottom/left\n- Resizing: fixed / hug / fill\n\n## Design Systems\n- Color styles\n- Text styles  \n- Component library\n- Spacing tokens\n\n## Prototyping\n- Connect frames with arrows\n- Set trigger: On Click, On Hover\n- Set animation: Instant, Dissolve, Smart Animate\n",
+      "videoUrl": "https://www.youtube.com/embed/FTFaQWZBqQ8",
+      "practiceQuestions": [
+        {
+          "q": "What is the difference between a Frame and a Group in Figma?",
+          "hint": "Frame: has constraints, clip content, auto layout; Group: just grouping without layout logic"
+        },
+        {
+          "q": "How do you create a reusable button component?",
+          "hint": "Design button → Right-click → Create Component → use in frames"
+        },
+        {
+          "q": "What is Smart Animate and when do you use it?",
+          "hint": "Transitions between frames by animating shared layers — great for micro-interactions"
+        }
+      ],
+      "assignment": "Design a mobile app onboarding flow (3 screens) in Figma with proper Auto Layout and a clickable prototype."
+    }
+  ],
+  "fullstack-developer": [
+    {
+      "id": "fs-html",
+      "title": "HTML & CSS Mastery",
+      "icon": "🌐",
+      "duration": "60 min",
+      "notes": "# HTML & CSS\n\n## Semantic HTML\n```html\n<header>, <nav>, <main>, <section>, <article>, <footer>\n```\n\n## CSS Flexbox\n```css\n.container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n}\n```\n\n## CSS Grid\n```css\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n```\n\n## Responsive Design\n```css\n@media (max-width: 768px) {\n  .grid { grid-template-columns: 1fr; }\n}\n```\n",
+      "videoUrl": "https://www.youtube.com/embed/pQN-pnXPaVg",
+      "practiceQuestions": [
+        {
+          "q": "Center a div both horizontally and vertically using Flexbox",
+          "hint": "display:flex; justify-content:center; align-items:center"
+        },
+        {
+          "q": "Create a 3-column responsive grid that collapses to 1 column on mobile",
+          "hint": "grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))"
+        },
+        {
+          "q": "What is the difference between position relative and absolute?",
+          "hint": "Relative: positioned relative to itself; Absolute: positioned relative to nearest positioned ancestor"
+        }
+      ],
+      "assignment": "Build a responsive portfolio page with header, projects grid, and footer. Must work on both desktop and mobile."
+    }
+  ]
+}

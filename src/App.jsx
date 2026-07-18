@@ -4,7 +4,12 @@ import Register from './pages/Register';
 import CareerGoal from './pages/CareerGoal';
 import Dashboard from './pages/Dashboard';
 import Roadmap from './pages/Roadmap';
-import Learning from './pages/Learning';
+import Courses from './pages/Courses';
+import CourseDetail from './pages/CourseDetail';
+import VideoPlayer from './pages/VideoPlayer';
+import NotesList from './pages/NotesList';
+import LmsQuiz from './pages/LmsQuiz';
+import AdminPanel from './pages/AdminPanel';
 import Quiz from './pages/Quiz';
 import PlacementScore from './pages/PlacementScore';
 import Companies from './pages/Companies';
@@ -87,7 +92,16 @@ export default function App() {
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/roadmap" element={<ProtectedRoute><Roadmap /></ProtectedRoute>} />
-        <Route path="/learning" element={<ProtectedRoute><Learning /></ProtectedRoute>} />
+        
+        {/* Dynamic LMS Routes */}
+        <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+        <Route path="/courses/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
+        <Route path="/courses/:courseId/module/:moduleId/video" element={<ProtectedRoute><VideoPlayer /></ProtectedRoute>} />
+        <Route path="/courses/:courseId/module/:moduleId/notes" element={<ProtectedRoute><NotesList /></ProtectedRoute>} />
+        <Route path="/courses/:courseId/module/:moduleId/quiz" element={<ProtectedRoute><LmsQuiz /></ProtectedRoute>} />
+        <Route path="/learning" element={<Navigate to="/courses" replace />} />
+        
+        <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
         
         <Route path="/aptitude" element={<ProtectedRoute><Aptitude /></ProtectedRoute>} />
