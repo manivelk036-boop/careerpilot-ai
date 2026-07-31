@@ -49,8 +49,12 @@ export const getVideos = (moduleId) => api.get(`/videos/module/${moduleId}`);
 export const getNotes = (moduleId) => api.get(`/notes/module/${moduleId}`);
 
 // ── Quiz ──────────────────────────────────────────────────
-export const getQuiz    = (moduleId) => api.get(`/quiz/module/${moduleId}`);
-export const submitQuiz = (data)     => api.post('/quiz/submit', data);
+export const getQuiz             = (moduleId) => api.get(`/quiz/module/${moduleId}`);
+export const submitQuiz          = (data)     => api.post('/quiz/submit', data);
+export const generateQuiz        = (params)   => api.get('/quiz/generate', { params });
+export const getCompanyMockTest  = (company, count = 15) => api.get(`/quiz/company/${company}`, { params: { count } });
+export const getQuizTopics       = ()         => api.get('/quiz/topics');
+export const getQuizCompanies    = ()         => api.get('/quiz/companies');
 
 // ── Progress ──────────────────────────────────────────────
 export const markProgress      = (data) => api.post('/progress', data);

@@ -11,7 +11,7 @@ public class QuizQuestion {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "module_id", nullable = false)
+    @JoinColumn(name = "module_id", nullable = true)
     private CourseModule module;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -34,6 +34,21 @@ public class QuizQuestion {
 
     @Column(columnDefinition = "TEXT")
     private String explanation;
+
+    @Column
+    private String topic;
+
+    @Column
+    private String subtopic;
+
+    @Column
+    private String difficulty; // Easy, Medium, Hard
+
+    @Column
+    private String company; // TCS, Infosys, Wipro, Zoho, Freshworks, Amazon, General
+
+    @Column(columnDefinition = "TEXT")
+    private String tags;
 
     // ── Getters & Setters ──────────────────────────────
     public Long getId() { return id; }
@@ -62,6 +77,21 @@ public class QuizQuestion {
 
     public String getExplanation() { return explanation; }
     public void setExplanation(String explanation) { this.explanation = explanation; }
+
+    public String getTopic() { return topic; }
+    public void setTopic(String topic) { this.topic = topic; }
+
+    public String getSubtopic() { return subtopic; }
+    public void setSubtopic(String subtopic) { this.subtopic = subtopic; }
+
+    public String getDifficulty() { return difficulty; }
+    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+
+    public String getCompany() { return company; }
+    public void setCompany(String company) { this.company = company; }
+
+    public String getTags() { return tags; }
+    public void setTags(String tags) { this.tags = tags; }
 
     public Long getModuleId() { return module != null ? module.getId() : null; }
 }

@@ -49,13 +49,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/modules/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/videos/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notes/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/quiz/**").permitAll()
-                // Public: H2 console (dev only)
-                .requestMatchers("/h2-console/**").permitAll()
-                // Authenticated: student-specific
-                .requestMatchers("/api/student/**").authenticated()
-                .requestMatchers("/api/progress/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/quiz/submit").authenticated()
+                .requestMatchers("/api/quiz/**").permitAll()
                 // Admin: any authenticated user (role-based auth can be added later)
                 .requestMatchers("/api/admin/**").authenticated()
                 // Everything else requires auth

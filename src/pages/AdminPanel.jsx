@@ -37,7 +37,7 @@ export default function AdminPanel() {
   const [noteForm, setNoteForm] = useState({ title: '', pdfUrl: '' });
 
   const [showQuizModal, setShowQuizModal] = useState(false);
-  const [quizForm, setQuizForm] = useState({ question: '', option1: '', option2: '', option3: '', option4: '', correctAnswer: 1, explanation: '' });
+  const [quizForm, setQuizForm] = useState({ question: '', option1: '', option2: '', option3: '', option4: '', correctAnswer: 1, explanation: '', topic: 'Core Java', subtopic: 'General', difficulty: 'Easy', company: 'General', tags: '' });
 
   useEffect(() => {
     fetchCourses();
@@ -713,10 +713,45 @@ export default function AdminPanel() {
                 </div>
                 <div>
                   <label className="text-slate-400">Explanation</label>
-                  <input type="text" value={quizForm.explanation} onChange={e => setQuizForm({...quizForm, explanation: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Because primitive types..." />
+                  <input type="text" value={quizForm.explanation || ''} onChange={e => setQuizForm({...quizForm, explanation: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Because primitive types..." />
                 </div>
               </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Add Question</button>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-slate-400">Topic</label>
+                  <select value={quizForm.topic || 'Core Java'} onChange={e => setQuizForm({...quizForm, topic: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
+                    <option value="Core Java">Core Java</option>
+                    <option value="OOP">OOP</option>
+                    <option value="Exceptions">Exceptions</option>
+                    <option value="Collections">Collections</option>
+                    <option value="Concurrency">Concurrency</option>
+                    <option value="JVM">JVM</option>
+                    <option value="Modern Java">Modern Java</option>
+                    <option value="Spring Boot">Spring Boot</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-slate-400">Difficulty</label>
+                  <select value={quizForm.difficulty || 'Easy'} onChange={e => setQuizForm({...quizForm, difficulty: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
+                    <option value="Easy">🟢 Easy</option>
+                    <option value="Medium">🟡 Medium</option>
+                    <option value="Hard">🔴 Hard</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-slate-400">Company Tag</label>
+                  <select value={quizForm.company || 'General'} onChange={e => setQuizForm({...quizForm, company: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
+                    <option value="General">General</option>
+                    <option value="Zoho">Zoho</option>
+                    <option value="TCS">TCS</option>
+                    <option value="Infosys">Infosys</option>
+                    <option value="Amazon">Amazon</option>
+                    <option value="Wipro">Wipro</option>
+                    <option value="Freshworks">Freshworks</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Save Question</button>
             </form>
           </motion.div>
         </div>
