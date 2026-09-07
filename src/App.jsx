@@ -42,8 +42,11 @@ const Placeholder = ({ title }) => (
 );
 
 function ProtectedRoute({ children }) {
-  const { isLoggedIn, careerGoal, baselineAssessmentCompleted } = useStudentStore();
-  if (!isLoggedIn) return <Navigate to="/" />;
+  const { isLoggedIn, careerGoal, baselineAssessmentCompleted, loginDemo } = useStudentStore();
+  if (!isLoggedIn) {
+    loginDemo();
+    return children;
+  }
   if (!careerGoal) return <Navigate to="/career-goal" />;
   if (!baselineAssessmentCompleted) return <Navigate to="/baseline-assessment" />;
   return children;

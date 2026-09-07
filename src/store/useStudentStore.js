@@ -53,6 +53,42 @@ export const useStudentStore = create(
     (set, get) => ({
       ...initialStudent,
 
+      loginDemo: () => {
+        const demoStudent = {
+          ...initialStudent,
+          id: 999,
+          name: 'Alex Johnson',
+          email: 'alex@demo.com',
+          college: 'Anna University',
+          department: 'Computer Science',
+          year: 3,
+          cgpa: 8.8,
+          careerGoal: 'java-developer',
+          xp: 1250,
+          coins: 450,
+          streak: 5,
+          placementScore: 78,
+          placementBreakdown: {
+            technical: 82,
+            communication: 74,
+            problemSolving: 80,
+            interviewReadiness: 70,
+            certifications: 65,
+            projects: 85,
+            aptitude: 76,
+            internship: 60,
+          },
+          badges: ['fast-learner', 'java-novice', 'streak-3'],
+          topicsCompleted: ['java-variables', 'java-loops'],
+          isLoggedIn: true,
+          isOnboarded: true,
+          baselineAssessmentCompleted: true,
+        };
+        localStorage.setItem('careerpilot_token', 'demo-jwt-token');
+        set({ ...demoStudent });
+        return demoStudent;
+      },
+
       login: async ({ email, password }) => {
         try {
           const res = await fetch(`${API_URL}/auth/login`, {

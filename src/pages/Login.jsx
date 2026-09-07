@@ -10,7 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login, isOnboarded } = useStudentStore();
+  const { login, isOnboarded, loginDemo } = useStudentStore();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -25,23 +25,22 @@ export default function Login() {
         navigate(student?.isOnboarded ? '/dashboard' : '/career-goal');
       }
     } catch (err) {
-      toast.error(err.message || 'Login failed. Please check credentials.');
+      if (err?.message?.includes('Failed to fetch') || err?.message?.includes('NetworkError') || err?.message?.includes('fetch')) {
+        toast('Backend offline on Vercel. Entering in Demo Mode! 🚀', { icon: 'ℹ️' });
+        loginDemo();
+        navigate('/dashboard');
+      } else {
+        toast.error(err.message || 'Login failed. Please check credentials.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDemo = async () => {
-    setLoading(true);
-    try {
-      const student = await login({ email: 'alex@demo.com', password: 'password' });
-      toast.success('Demo mode activated! 🎯');
-      navigate('/dashboard');
-    } catch (err) {
-      toast.error('Failed to activate demo mode.');
-    } finally {
-      setLoading(false);
-    }
+  const handleDemo = () => {
+    loginDemo();
+    toast.success('Demo mode activated! 🎯');
+    navigate('/dashboard');
   };
 
   return (

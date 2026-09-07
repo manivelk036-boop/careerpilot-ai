@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getCareerGoals } from '../services/api';
+import { careerPaths } from '../data/careers';
 import Layout from '../components/Layout';
 import { BookOpen, ChevronRight, Layers, Target, Zap } from 'lucide-react';
 
@@ -96,10 +97,14 @@ export default function Courses() {
       setLoading(true);
       setError(null);
       const res = await getCareerGoals();
-      setGoals(res.data || []);
+      if (res.data && res.data.length > 0) {
+        setGoals(res.data);
+      } else {
+        setGoals(careerPaths.map((c, i) => ({ id: i + 1, name: c.title, description: c.description })));
+      }
     } catch (err) {
-      setError('Could not load courses. Please try again.');
-      console.error('Courses fetch error:', err);
+      // Fallback for Vercel/offline mode
+      setGoals(careerPaths.map((c, i) => ({ id: i + 1, name: c.title, description: c.description })));
     } finally {
       setLoading(false);
     }
