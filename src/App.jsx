@@ -21,6 +21,11 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import BaselineAssessment from './pages/BaselineAssessment';
+// Career-hierarchy LMS pages
+import CareerLearning    from './pages/CareerLearning';
+import CareerVideoPlayer from './pages/CareerVideoPlayer';
+import CareerNotesList   from './pages/CareerNotesList';
+import CareerLmsQuiz     from './pages/CareerLmsQuiz';
 import { Toaster } from 'react-hot-toast';
 import { useStudentStore } from './store/useStudentStore';
 import Layout from './components/Layout';
@@ -93,12 +98,19 @@ export default function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/roadmap" element={<ProtectedRoute><Roadmap /></ProtectedRoute>} />
         
-        {/* Dynamic LMS Routes */}
+        {/* Dynamic LMS Routes (legacy) */}
         <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
         <Route path="/courses/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
         <Route path="/courses/:courseId/module/:moduleId/video" element={<ProtectedRoute><VideoPlayer /></ProtectedRoute>} />
         <Route path="/courses/:courseId/module/:moduleId/notes" element={<ProtectedRoute><NotesList /></ProtectedRoute>} />
         <Route path="/courses/:courseId/module/:moduleId/quiz" element={<ProtectedRoute><LmsQuiz /></ProtectedRoute>} />
+
+        {/* Career-hierarchy LMS Routes (NEW — used by admin-added content) */}
+        <Route path="/learn/:goalId" element={<ProtectedRoute><CareerLearning /></ProtectedRoute>} />
+        <Route path="/learn/:goalId/module/:moduleId/lesson/:lessonId/video" element={<ProtectedRoute><CareerVideoPlayer /></ProtectedRoute>} />
+        <Route path="/learn/:goalId/module/:moduleId/lesson/:lessonId/notes" element={<ProtectedRoute><CareerNotesList /></ProtectedRoute>} />
+        <Route path="/learn/:goalId/module/:moduleId/lesson/:lessonId/quiz" element={<ProtectedRoute><CareerLmsQuiz /></ProtectedRoute>} />
+
         <Route path="/learning" element={<Navigate to="/courses" replace />} />
         
         <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />

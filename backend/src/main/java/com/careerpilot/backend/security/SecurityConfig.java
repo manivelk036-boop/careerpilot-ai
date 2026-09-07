@@ -20,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -43,15 +45,20 @@ public class SecurityConfig {
                 headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 // Public: auth endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                // Public: read-only LMS data
-                .requestMatchers(HttpMethod.GET, "/api/courses", "/api/courses/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/modules/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/videos/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/notes/**").permitAll()
-                .requestMatchers("/api/quiz/**").permitAll()
-                // Admin: any authenticated user (role-based auth can be added later)
-                .requestMatchers("/api/admin/**").authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/student/**")).permitAll()
+                // Public: read-only LMS & Career data
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/career-goals/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/career-goals")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/modules/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/lessons/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/courses/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/courses")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/videos/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/notes/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/quiz/**")).permitAll()
+                // Admin: ROLE_ADMIN only
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).hasAuthority("ROLE_ADMIN")
                 // Everything else requires auth
                 .anyRequest().authenticated()
             )

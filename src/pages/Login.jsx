@@ -19,7 +19,11 @@ export default function Login() {
     try {
       const student = await login({ email, password });
       toast.success('Welcome back! 🚀');
-      navigate(student.isOnboarded ? '/dashboard' : '/career-goal');
+      if (student?.role === 'ROLE_ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate(student?.isOnboarded ? '/dashboard' : '/career-goal');
+      }
     } catch (err) {
       toast.error(err.message || 'Login failed. Please check credentials.');
     } finally {

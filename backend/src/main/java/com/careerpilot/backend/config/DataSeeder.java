@@ -15,10 +15,31 @@ public class DataSeeder implements CommandLineRunner {
     @Autowired private NotesRepository notesRepository;
     @Autowired private QuizRepository quizRepository;
 
+    @Autowired private StudentRepository studentRepository;
+    @Autowired private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) throws Exception {
-        seedCourseStructure();
-        seedMasterQuestionBank();
+        createAdminAccountIfMissing();
+    }
+
+    private void createAdminAccountIfMissing() {
+        if (studentRepository.findByEmail("admin@careerpilot.com").isEmpty()) {
+            Student admin = new Student();
+            admin.setName("CareerPilot Admin");
+            admin.setEmail("admin@careerpilot.com");
+            admin.setPassword(passwordEncoder.encode("MANI2006"));
+            admin.setRole("ROLE_ADMIN");
+            admin.setCollege("CareerPilot HQ");
+            admin.setDepartment("System Administration");
+            admin.setYear(4);
+            admin.setCgpa(10.0);
+            admin.setIsOnboarded(true);
+            admin.setBaselineAssessmentCompleted(true);
+            admin.setIsLoggedIn(true);
+            studentRepository.save(admin);
+            System.out.println(">>> ONE ADMIN ACCOUNT CREATED: admin@careerpilot.com (ROLE_ADMIN)");
+        }
     }
 
     private void seedCourseStructure() {

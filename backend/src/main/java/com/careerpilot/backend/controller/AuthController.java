@@ -42,7 +42,7 @@ public class AuthController {
         student.setIsLoggedIn(true);
 
         Student saved = studentRepository.save(student);
-        String token = jwtUtil.generateToken(saved.getEmail());
+        String token = jwtUtil.generateToken(saved.getEmail(), saved.getRole());
 
         return ResponseEntity.ok(buildAuthResponse(token, saved));
     }
@@ -90,7 +90,7 @@ public class AuthController {
 
         student.setIsLoggedIn(true);
         Student saved = studentRepository.save(student);
-        String token = jwtUtil.generateToken(saved.getEmail());
+        String token = jwtUtil.generateToken(saved.getEmail(), saved.getRole());
 
         return ResponseEntity.ok(buildAuthResponse(token, saved));
     }

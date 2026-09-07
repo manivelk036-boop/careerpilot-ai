@@ -1,179 +1,102 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getCourses } from '../services/api';
+import { getCareerGoals } from '../services/api';
 import Layout from '../components/Layout';
-import {
-  BookOpen, Clock, Play, Users, ChevronRight,
-  Layers, Star, Wifi, WifiOff
-} from 'lucide-react';
+import { BookOpen, ChevronRight, Layers, Target, Zap } from 'lucide-react';
 
-// ── Skeleton card for loading state ──────────────────────────────────
-function CourseSkeleton() {
-  return (
-    <div className="glass rounded-2xl overflow-hidden animate-pulse">
-      <div className="w-full h-44 bg-white/5" />
-      <div className="p-5 space-y-3">
-        <div className="h-3 bg-white/10 rounded-full w-1/3" />
-        <div className="h-5 bg-white/10 rounded-full w-3/4" />
-        <div className="h-3 bg-white/10 rounded-full w-full" />
-        <div className="h-3 bg-white/10 rounded-full w-2/3" />
-        <div className="flex gap-3 mt-4">
-          <div className="h-8 bg-white/10 rounded-xl flex-1" />
-          <div className="h-8 bg-white/10 rounded-xl w-24" />
-        </div>
-      </div>
-    </div>
-  );
-}
+// Career-goal card colors by index
+const CARD_GRADIENTS = [
+  'from-blue-600/20 to-blue-900/20 border-blue-500/20',
+  'from-purple-600/20 to-purple-900/20 border-purple-500/20',
+  'from-emerald-600/20 to-emerald-900/20 border-emerald-500/20',
+  'from-amber-600/20 to-amber-900/20 border-amber-500/20',
+  'from-rose-600/20 to-rose-900/20 border-rose-500/20',
+  'from-cyan-600/20 to-cyan-900/20 border-cyan-500/20',
+];
 
-// ── Difficulty color helper ───────────────────────────────────────────
-const difficultyStyle = {
-  Beginner:     'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
-  Intermediate: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
-  Advanced:     'bg-red-500/15 text-red-400 border-red-500/20',
-};
+const ICON_COLORS = [
+  'text-blue-400', 'text-purple-400', 'text-emerald-400',
+  'text-amber-400', 'text-rose-400', 'text-cyan-400',
+];
 
-// ── Course Card ───────────────────────────────────────────────────────
-function CourseCard({ course, index }) {
-  const progress = course.progressPercent ?? 0;
+function CareerCard({ goal, index }) {
+  const grad = CARD_GRADIENTS[index % CARD_GRADIENTS.length];
+  const col  = ICON_COLORS[index % ICON_COLORS.length];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.4 }}
-      className="glass rounded-2xl overflow-hidden flex flex-col hover:border-blue-500/30 transition-all duration-300 group"
+      transition={{ delay: index * 0.07, duration: 0.4 }}
+      className={`glass rounded-2xl overflow-hidden flex flex-col bg-gradient-to-br border hover:scale-[1.02] transition-all duration-300 group ${grad}`}
     >
-      {/* Thumbnail */}
-      <div className="relative w-full h-44 overflow-hidden bg-gradient-to-br from-blue-900/40 to-purple-900/40">
-        {course.thumbnailUrl ? (
-          <img
-            src={course.thumbnailUrl}
-            alt={course.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <BookOpen size={48} className="text-blue-400/40" />
-          </div>
-        )}
-        {/* Difficulty badge */}
-        <span className={`absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full border ${difficultyStyle[course.difficulty] || difficultyStyle.Beginner}`}>
-          {course.difficulty || 'Beginner'}
-        </span>
-        {/* Progress overlay */}
-        {progress > 0 && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-            <div
-              className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-700"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
+      {/* Icon area */}
+      <div className="p-6 flex items-center gap-4">
+        <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center flex-shrink-0`}>
+          <Target size={28} className={col} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${col}`}>Career Path</p>
+          <h3 className="font-display font-bold text-white text-lg leading-tight line-clamp-2 group-hover:text-blue-200 transition-colors">
+            {goal.title || goal.name}
+          </h3>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* Category */}
-        {course.category && (
-          <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider mb-1">
-            {course.category}
+      {/* Description */}
+      {goal.description && (
+        <div className="px-6 pb-4">
+          <p className="text-slate-500 text-xs leading-relaxed line-clamp-3">
+            {goal.description}
           </p>
-        )}
-
-        <h3 className="font-display font-bold text-white text-base mb-1.5 line-clamp-1 group-hover:text-blue-300 transition-colors">
-          {course.title}
-        </h3>
-
-        <p className="text-slate-500 text-xs mb-4 line-clamp-2 leading-relaxed">
-          {course.description || 'No description available.'}
-        </p>
-
-        {/* Meta row */}
-        <div className="flex items-center gap-4 text-xs text-slate-500 mb-4">
-          <span className="flex items-center gap-1">
-            <Layers size={12} /> {course.totalModules || 0} Modules
-          </span>
-          <span className="flex items-center gap-1">
-            <Play size={12} /> {course.totalVideos || 0} Videos
-          </span>
-          {course.durationHours && (
-            <span className="flex items-center gap-1">
-              <Clock size={12} /> {course.durationHours}h
-            </span>
-          )}
         </div>
+      )}
 
-        {/* Progress bar */}
-        {progress > 0 && (
-          <div className="mb-4">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-500">Progress</span>
-              <span className="text-blue-400 font-semibold">{progress}%</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-white/5">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Instructor */}
-        {course.instructor && (
-          <p className="text-xs text-slate-600 mb-4">
-            👨‍🏫 {course.instructor}
-          </p>
-        )}
-
-        <div className="mt-auto">
-          <Link
-            to={`/courses/${course.id}`}
-            className="btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl"
-          >
-            {progress > 0 ? '▶ Continue Learning' : '🚀 Start Course'}
-            <ChevronRight size={14} />
-          </Link>
-        </div>
+      {/* CTA */}
+      <div className="mt-auto p-6 pt-2">
+        <Link
+          to={`/learn/${goal.id}`}
+          className="btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl"
+        >
+          <Zap size={14} /> Start Learning
+          <ChevronRight size={14} />
+        </Link>
       </div>
     </motion.div>
   );
 }
 
-// ── Empty State ────────────────────────────────────────────────────────
-function EmptyState() {
+function SkeletonCard() {
   return (
-    <div className="col-span-full flex flex-col items-center justify-center py-24 text-center">
-      <div className="w-20 h-20 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-4">
-        <BookOpen size={36} className="text-blue-400/50" />
+    <div className="glass rounded-2xl p-6 animate-pulse space-y-3">
+      <div className="flex items-center gap-4">
+        <div className="w-14 h-14 bg-white/5 rounded-2xl" />
+        <div className="flex-1 space-y-2">
+          <div className="h-3 bg-white/10 rounded w-1/3" />
+          <div className="h-5 bg-white/10 rounded w-3/4" />
+        </div>
       </div>
-      <h3 className="text-white font-bold text-xl mb-2">No Courses Available Yet</h3>
-      <p className="text-slate-500 text-sm max-w-md">
-        Courses will appear here once an admin adds them. Check back soon!
-      </p>
+      <div className="h-3 bg-white/5 rounded w-full" />
+      <div className="h-3 bg-white/5 rounded w-2/3" />
+      <div className="h-10 bg-white/10 rounded-xl mt-4" />
     </div>
   );
 }
 
-// ── Main Courses Page ──────────────────────────────────────────────────
 export default function Courses() {
-  const [courses, setCourses]     = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState(null);
-  const [filter, setFilter]       = useState('All');
+  const [goals,   setGoals]   = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  useEffect(() => { fetchGoals(); }, []);
 
-  const fetchCourses = async () => {
+  const fetchGoals = async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await getCourses();
-      setCourses(res.data || []);
+      const res = await getCareerGoals();
+      setGoals(res.data || []);
     } catch (err) {
       setError('Could not load courses. Please try again.');
       console.error('Courses fetch error:', err);
@@ -182,17 +105,6 @@ export default function Courses() {
     }
   };
 
-  const categories = ['All', ...new Set(courses.map(c => c.category).filter(Boolean))];
-  const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
-
-  const [diffFilter, setDiffFilter] = useState('All');
-
-  const filtered = courses.filter(c => {
-    const catOk  = filter === 'All' || c.category === filter;
-    const diffOk = diffFilter === 'All' || c.difficulty === diffFilter;
-    return catOk && diffOk;
-  });
-
   return (
     <Layout title="Courses">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -200,61 +112,18 @@ export default function Courses() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="font-display font-bold text-2xl text-white">📚 All Courses</h2>
+            <h2 className="font-display font-bold text-2xl text-white">📚 Career Learning Paths</h2>
             <p className="text-slate-500 text-sm mt-1">
-              {loading ? 'Loading courses...' : `${filtered.length} course${filtered.length !== 1 ? 's' : ''} available`}
+              {loading ? 'Loading courses...' : `${goals.length} career path${goals.length !== 1 ? 's' : ''} available`}
             </p>
           </div>
-
-          {/* Connection status */}
-          {error && (
-            <div className="flex items-center gap-2 text-red-400 text-sm">
-              <WifiOff size={14} /> Backend offline
-            </div>
-          )}
         </div>
-
-        {/* Filters */}
-        {!loading && courses.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            <div className="flex gap-2 flex-wrap">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setFilter(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                    filter === cat
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-2 flex-wrap ml-auto">
-              {difficulties.map(d => (
-                <button
-                  key={d}
-                  onClick={() => setDiffFilter(d)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                    diffFilter === d
-                      ? 'bg-purple-500 text-white'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10'
-                  }`}
-                >
-                  {d}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Error */}
         {error && (
           <div className="glass p-6 rounded-2xl border border-red-500/20 text-center">
             <p className="text-red-400 text-sm mb-3">{error}</p>
-            <button onClick={fetchCourses} className="btn-secondary text-sm px-4 py-2">
+            <button onClick={fetchGoals} className="btn-secondary text-sm px-4 py-2">
               Retry
             </button>
           </div>
@@ -262,12 +131,21 @@ export default function Courses() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading
-            ? Array.from({ length: 6 }).map((_, i) => <CourseSkeleton key={i} />)
-            : filtered.length > 0
-            ? filtered.map((course, i) => <CourseCard key={course.id} course={course} index={i} />)
-            : <EmptyState />
-          }
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+          ) : goals.length > 0 ? (
+            goals.map((goal, i) => <CareerCard key={goal.id} goal={goal} index={i} />)
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-24 text-center">
+              <div className="w-20 h-20 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-4">
+                <BookOpen size={36} className="text-blue-400/50" />
+              </div>
+              <h3 className="text-white font-bold text-xl mb-2">No Courses Available Yet</h3>
+              <p className="text-slate-500 text-sm max-w-md">
+                Courses will appear here once an admin adds career goals. Check back soon!
+              </p>
+            </div>
+          )}
         </div>
 
       </div>

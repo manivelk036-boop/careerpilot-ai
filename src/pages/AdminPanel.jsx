@@ -1,759 +1,554 @@
 import { useState, useEffect } from 'react';
-import { adminGetCourses, adminCreateCourse, adminUpdateCourse, adminDeleteCourse,
-         adminGetModules, adminCreateModule, adminUpdateModule, adminDeleteModule,
-         adminGetVideos, adminCreateVideo, adminDeleteVideo,
-         adminGetNotes, adminCreateNote, adminDeleteNote,
-         adminGetQuiz, adminCreateQuiz, adminDeleteQuiz } from '../services/api';
+import {
+  getCareerLmsGoals, getCareerLmsModules, getCareerLmsLessons,
+  getCareerLmsNotes, getCareerLmsVideos, getCareerLmsQuizzes,
+  adminCreateCareerModule, adminUpdateCareerModule, adminDeleteCareerModule,
+  adminCreateCareerLesson, adminUpdateCareerLesson, adminDeleteCareerLesson,
+  adminCreateCareerNotes, adminUpdateCareerNotes, adminDeleteCareerNotes,
+  adminCreateCareerVideo, adminUpdateCareerVideo, adminDeleteCareerVideo,
+  adminCreateCareerQuiz, adminUpdateCareerQuiz, adminDeleteCareerQuiz
+} from '../services/api';
 import Layout from '../components/Layout';
 import { Plus, Edit2, Trash2, BookOpen, Layers, Play, FileText, Brain, ChevronRight, X, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
 export default function AdminPanel() {
-  const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [careerGoals, setCareerGoals] = useState([]);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+
   const [modules, setModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState(null);
 
-  // Lists for selected module
-  const [videos, setVideos] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [selectedLesson, setSelectedLesson] = useState(null);
+
+  // Lesson Content
   const [notes, setNotes] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('courses'); // courses, modules, content
 
-  // Form modals
-  const [showCourseModal, setShowCourseModal] = useState(false);
-  const [courseForm, setCourseForm] = useState({ id: null, title: '', description: '', thumbnailUrl: '', difficulty: 'Beginner', category: '', instructor: '', durationHours: '' });
-
+  // Modals
   const [showModuleModal, setShowModuleModal] = useState(false);
-  const [moduleForm, setModuleForm] = useState({ id: null, title: '', description: '', moduleOrder: 1 });
+  const [moduleForm, setModuleForm] = useState({ id: null, name: '', description: '', moduleOrder: 1 });
 
-  const [showVideoModal, setShowVideoModal] = useState(false);
-  const [videoForm, setVideoForm] = useState({ title: '', youtubeUrl: '', durationMinutes: 10, orderNo: 1 });
+  const [showLessonModal, setShowLessonModal] = useState(false);
+  const [lessonForm, setLessonForm] = useState({ id: null, name: '', description: '', lessonOrder: 1 });
 
   const [showNoteModal, setShowNoteModal] = useState(false);
-  const [noteForm, setNoteForm] = useState({ title: '', pdfUrl: '' });
+  const [noteForm, setNoteForm] = useState({ id: null, title: '', content: '' });
+
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [videoForm, setVideoForm] = useState({ id: null, title: '', youtubeUrl: '', durationMinutes: 15, orderNo: 1 });
 
   const [showQuizModal, setShowQuizModal] = useState(false);
-  const [quizForm, setQuizForm] = useState({ question: '', option1: '', option2: '', option3: '', option4: '', correctAnswer: 1, explanation: '', topic: 'Core Java', subtopic: 'General', difficulty: 'Easy', company: 'General', tags: '' });
+  const [quizForm, setQuizForm] = useState({ id: null, question: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', explanation: '' });
 
   useEffect(() => {
-    fetchCourses();
+    fetchGoals();
   }, []);
 
-  const fetchCourses = async () => {
+  const fetchGoals = async () => {
     setLoading(true);
     try {
-      const res = await adminGetCourses();
-      setCourses(res.data || []);
+      const res = await getCareerLmsGoals();
+      setCareerGoals(res.data || []);
     } catch (e) {
-      toast.error('Failed to load courses.');
+      toast.error('Failed to load career goals.');
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchModules = async (courseId) => {
+  const handleSelectGoal = async (goal) => {
+    setSelectedGoal(goal);
+    setSelectedModule(null);
+    setSelectedLesson(null);
+    setModules([]);
+    setLessons([]);
+    setNotes([]);
+    setVideos([]);
+    setQuizzes([]);
+
     try {
-      const res = await adminGetModules(courseId);
+      const res = await getCareerLmsModules(goal.id);
       setModules(res.data || []);
     } catch (e) {
       toast.error('Failed to load modules.');
     }
   };
 
-  const fetchModuleContent = async (moduleId) => {
+  const handleSelectModule = async (module) => {
+    setSelectedModule(module);
+    setSelectedLesson(null);
+    setLessons([]);
+    setNotes([]);
+    setVideos([]);
+    setQuizzes([]);
+
     try {
-      const [vRes, nRes, qRes] = await Promise.all([
-        adminGetVideos(moduleId),
-        adminGetNotes(moduleId),
-        adminGetQuiz(moduleId)
+      const res = await getCareerLmsLessons(selectedGoal.id, module.id);
+      setLessons(res.data || []);
+    } catch (e) {
+      toast.error('Failed to load lessons.');
+    }
+  };
+
+  const handleSelectLesson = async (lesson) => {
+    setSelectedLesson(lesson);
+    fetchLessonContent(selectedGoal.id, selectedModule.id, lesson.id);
+  };
+
+  const fetchLessonContent = async (goalId, moduleId, lessonId) => {
+    try {
+      const [nRes, vRes, qRes] = await Promise.all([
+        getCareerLmsNotes(goalId, moduleId, lessonId),
+        getCareerLmsVideos(goalId, moduleId, lessonId),
+        getCareerLmsQuizzes(goalId, moduleId, lessonId)
       ]);
-      setVideos(vRes.data || []);
       setNotes(nRes.data || []);
+      setVideos(vRes.data || []);
       setQuizzes(qRes.data || []);
     } catch (e) {
-      toast.error('Failed to load module contents.');
+      toast.error('Failed to load lesson content.');
     }
   };
 
-  const handleSelectCourse = (course) => {
-    setSelectedCourse(course);
-    setSelectedModule(null);
-    fetchModules(course.id);
-    setActiveTab('modules');
-  };
+  // ── MODULE ACTIONS ─────────────────────────────────────────
 
-  const handleSelectModule = (module) => {
-    setSelectedModule(module);
-    fetchModuleContent(module.id);
-    setActiveTab('content');
-  };
-
-  // ── COURSE ACTIONS ──────────────────────────────────────────
-  const handleSaveCourse = async (e) => {
-    e.preventDefault();
-    try {
-      if (courseForm.id) {
-        await adminUpdateCourse(courseForm.id, courseForm);
-        toast.success('Course updated!');
-      } else {
-        await adminCreateCourse(courseForm);
-        toast.success('Course created!');
-      }
-      fetchCourses();
-      setShowCourseModal(false);
-    } catch (err) {
-      toast.error('Failed to save course.');
-    }
-  };
-
-  const handleDeleteCourse = async (id) => {
-    if (!window.confirm('Delete this course? All modules, videos, notes, and quizzes will be deleted.')) return;
-    try {
-      await adminDeleteCourse(id);
-      toast.success('Course deleted.');
-      if (selectedCourse?.id === id) {
-        setSelectedCourse(null);
-        setSelectedModule(null);
-        setModules([]);
-        setActiveTab('courses');
-      }
-      fetchCourses();
-    } catch (e) {
-      toast.error('Failed to delete course.');
-    }
-  };
-
-  // ── MODULE ACTIONS ──────────────────────────────────────────
-  const handleSaveModule = async (e) => {
-    e.preventDefault();
+  const handleSaveModule = async () => {
+    if (!moduleForm.name.trim()) return toast.error('Module name required');
     try {
       if (moduleForm.id) {
-        await adminUpdateModule(moduleForm.id, moduleForm);
+        await adminUpdateCareerModule(selectedGoal.id, moduleForm.id, moduleForm);
         toast.success('Module updated!');
       } else {
-        await adminCreateModule({ ...moduleForm, courseId: selectedCourse.id });
+        await adminCreateCareerModule(selectedGoal.id, moduleForm);
         toast.success('Module created!');
       }
-      fetchModules(selectedCourse.id);
       setShowModuleModal(false);
+      handleSelectGoal(selectedGoal);
     } catch (e) {
       toast.error('Failed to save module.');
     }
   };
 
-  const handleDeleteModule = async (id) => {
+  const handleDeleteModule = async (mId) => {
     if (!window.confirm('Delete this module?')) return;
     try {
-      await adminDeleteModule(id);
-      toast.success('Module deleted.');
-      if (selectedModule?.id === id) {
-        setSelectedModule(null);
-        setVideos([]);
-        setNotes([]);
-        setQuizzes([]);
-        setActiveTab('modules');
-      }
-      fetchModules(selectedCourse.id);
+      await adminDeleteCareerModule(selectedGoal.id, mId);
+      toast.success('Module deleted!');
+      handleSelectGoal(selectedGoal);
     } catch (e) {
       toast.error('Failed to delete module.');
     }
   };
 
-  // ── VIDEO ACTIONS ───────────────────────────────────────────
-  const handleSaveVideo = async (e) => {
-    e.preventDefault();
+  // ── LESSON ACTIONS ─────────────────────────────────────────
+
+  const handleSaveLesson = async () => {
+    if (!lessonForm.name.trim()) return toast.error('Lesson name required');
     try {
-      await adminCreateVideo({ ...videoForm, moduleId: selectedModule.id });
-      toast.success('Video added!');
-      fetchModuleContent(selectedModule.id);
-      setShowVideoModal(false);
+      if (lessonForm.id) {
+        await adminUpdateCareerLesson(selectedGoal.id, selectedModule.id, lessonForm.id, lessonForm);
+        toast.success('Lesson updated!');
+      } else {
+        await adminCreateCareerLesson(selectedGoal.id, selectedModule.id, lessonForm);
+        toast.success('Lesson created!');
+      }
+      setShowLessonModal(false);
+      handleSelectModule(selectedModule);
     } catch (e) {
-      toast.error('Failed to add video.');
+      toast.error('Failed to save lesson.');
     }
   };
 
-  const handleDeleteVideo = async (id) => {
-    if (!window.confirm('Remove this video?')) return;
+  const handleDeleteLesson = async (lId) => {
+    if (!window.confirm('Delete this lesson?')) return;
     try {
-      await adminDeleteVideo(id);
-      toast.success('Video removed.');
-      fetchModuleContent(selectedModule.id);
+      await adminDeleteCareerLesson(selectedGoal.id, selectedModule.id, lId);
+      toast.success('Lesson deleted!');
+      handleSelectModule(selectedModule);
     } catch (e) {
-      toast.error('Failed to remove video.');
+      toast.error('Failed to delete lesson.');
     }
   };
 
-  // ── NOTE ACTIONS ────────────────────────────────────────────
-  const handleSaveNote = async (e) => {
-    e.preventDefault();
+  // ── NOTES ACTIONS ──────────────────────────────────────────
+
+  const handleSaveNote = async () => {
+    if (!noteForm.title.trim() || !noteForm.content.trim()) return toast.error('Title and content required');
     try {
-      await adminCreateNote({ ...noteForm, moduleId: selectedModule.id });
-      toast.success('Note added!');
-      fetchModuleContent(selectedModule.id);
+      if (noteForm.id) {
+        await adminUpdateCareerNotes(selectedGoal.id, selectedModule.id, selectedLesson.id, noteForm.id, noteForm);
+        toast.success('Notes updated!');
+      } else {
+        await adminCreateCareerNotes(selectedGoal.id, selectedModule.id, selectedLesson.id, noteForm);
+        toast.success('Notes created!');
+      }
       setShowNoteModal(false);
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
     } catch (e) {
-      toast.error('Failed to add note.');
+      toast.error('Failed to save notes.');
     }
   };
 
-  const handleDeleteNote = async (id) => {
-    if (!window.confirm('Remove this note?')) return;
+  const handleDeleteNote = async (nId) => {
+    if (!window.confirm('Delete notes?')) return;
     try {
-      await adminDeleteNote(id);
-      toast.success('Note removed.');
-      fetchModuleContent(selectedModule.id);
+      await adminDeleteCareerNotes(selectedGoal.id, selectedModule.id, selectedLesson.id, nId);
+      toast.success('Notes deleted!');
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
     } catch (e) {
-      toast.error('Failed to remove note.');
+      toast.error('Failed to delete notes.');
     }
   };
 
-  // ── QUIZ ACTIONS ────────────────────────────────────────────
-  const handleSaveQuiz = async (e) => {
-    e.preventDefault();
+  // ── VIDEO ACTIONS ──────────────────────────────────────────
+
+  const handleSaveVideo = async () => {
+    if (!videoForm.title.trim() || !videoForm.youtubeUrl.trim()) return toast.error('Title and YouTube URL required');
     try {
-      await adminCreateQuiz({ ...quizForm, moduleId: selectedModule.id });
-      toast.success('Quiz question added!');
-      fetchModuleContent(selectedModule.id);
+      if (videoForm.id) {
+        await adminUpdateCareerVideo(selectedGoal.id, selectedModule.id, selectedLesson.id, videoForm.id, videoForm);
+        toast.success('Video updated!');
+      } else {
+        await adminCreateCareerVideo(selectedGoal.id, selectedModule.id, selectedLesson.id, videoForm);
+        toast.success('Video added!');
+      }
+      setShowVideoModal(false);
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
+    } catch (e) {
+      toast.error(e.response?.data?.message || 'Invalid YouTube URL or server error.');
+    }
+  };
+
+  const handleDeleteVideo = async (vId) => {
+    if (!window.confirm('Delete video link?')) return;
+    try {
+      await adminDeleteCareerVideo(selectedGoal.id, selectedModule.id, selectedLesson.id, vId);
+      toast.success('Video deleted!');
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
+    } catch (e) {
+      toast.error('Failed to delete video.');
+    }
+  };
+
+  // ── QUIZ ACTIONS ───────────────────────────────────────────
+
+  const handleSaveQuiz = async () => {
+    if (!quizForm.question.trim() || !quizForm.optionA.trim() || !quizForm.optionB.trim()) return toast.error('Question and options A/B required');
+    try {
+      if (quizForm.id) {
+        await adminUpdateCareerQuiz(selectedGoal.id, selectedModule.id, selectedLesson.id, quizForm.id, quizForm);
+        toast.success('Quiz updated!');
+      } else {
+        await adminCreateCareerQuiz(selectedGoal.id, selectedModule.id, selectedLesson.id, quizForm);
+        toast.success('Quiz created!');
+      }
       setShowQuizModal(false);
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
     } catch (e) {
-      toast.error('Failed to add quiz question.');
+      toast.error('Failed to save quiz question.');
     }
   };
 
-  const handleDeleteQuiz = async (id) => {
-    if (!window.confirm('Delete this question?')) return;
+  const handleDeleteQuiz = async (qId) => {
+    if (!window.confirm('Delete quiz question?')) return;
     try {
-      await adminDeleteQuiz(id);
-      toast.success('Question deleted.');
-      fetchModuleContent(selectedModule.id);
+      await adminDeleteCareerQuiz(selectedGoal.id, selectedModule.id, selectedLesson.id, qId);
+      toast.success('Quiz deleted!');
+      fetchLessonContent(selectedGoal.id, selectedModule.id, selectedLesson.id);
     } catch (e) {
-      toast.error('Failed to delete question.');
+      toast.error('Failed to delete quiz.');
     }
   };
 
   return (
-    <Layout title="LMS Admin Panel">
+    <Layout title="Admin LMS Dashboard">
       <div className="max-w-7xl mx-auto space-y-6">
 
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="font-display font-bold text-2xl text-white">⚙️ LMS Management</h2>
-            <p className="text-slate-500 text-sm">Create and organize courses, modules, videos, notes, and quiz questions.</p>
+        {/* Header Breadcrumb Banner */}
+        <div className="glass p-6 rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+          <h1 className="font-display font-bold text-2xl text-white mb-2">⚡ Career LMS Content Management</h1>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-300">
+            <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              Career: {selectedGoal ? selectedGoal.name : 'Not Selected'}
+            </span>
+            <ChevronRight size={14} className="text-slate-500" />
+            <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+              Module: {selectedModule ? selectedModule.name : 'Not Selected'}
+            </span>
+            <ChevronRight size={14} className="text-slate-500" />
+            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              Lesson: {selectedLesson ? selectedLesson.name : 'Not Selected'}
+            </span>
           </div>
         </div>
 
-        {/* Tab Headers */}
-        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/10 w-fit">
-          <button
-            onClick={() => setActiveTab('courses')}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-              activeTab === 'courses' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            📚 Courses ({courses.length})
-          </button>
-          {selectedCourse && (
-            <button
-              onClick={() => setActiveTab('modules')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'modules' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              📂 Modules: {selectedCourse.title}
-            </button>
-          )}
-          {selectedModule && (
-            <button
-              onClick={() => setActiveTab('content')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'content' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              📝 Contents: {selectedModule.title}
-            </button>
-          )}
-        </div>
-
-        {/* TAB 1: COURSES LIST */}
-        {activeTab === 'courses' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-white font-bold text-base">Select a course to manage its content</h3>
+        {/* STEP 1: SELECT CAREER GOAL */}
+        <div>
+          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">1. Select Target Career Goal</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {careerGoals.map(goal => (
               <button
-                onClick={() => {
-                  setCourseForm({ id: null, title: '', description: '', thumbnailUrl: '', difficulty: 'Beginner', category: '', instructor: '', durationHours: '' });
-                  setShowCourseModal(true);
-                }}
-                className="btn-primary flex items-center gap-1 text-xs py-2 px-4"
+                key={goal.id}
+                onClick={() => handleSelectGoal(goal)}
+                className={`p-4 rounded-xl border text-left font-medium text-xs transition-all ${
+                  selectedGoal?.id === goal.id
+                    ? 'bg-blue-500/20 border-blue-500 text-white shadow-glow-blue'
+                    : 'glass text-slate-400 hover:text-white hover:border-white/20'
+                }`}
               >
-                <Plus size={14} /> Add Course
+                <div className="font-bold text-sm mb-1">{goal.name}</div>
+                <div className="text-[10px] text-slate-500 line-clamp-1">{goal.description}</div>
               </button>
-            </div>
-
-            {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
-                {[1,2,3].map(i => <div key={i} className="h-48 bg-white/5 rounded-2xl" />)}
-              </div>
-            ) : courses.length === 0 ? (
-              <div className="glass p-12 text-center rounded-2xl">
-                <p className="text-slate-500 mb-4">No courses available in LMS. Start by adding one!</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courses.map(course => (
-                  <div key={course.id} className="glass rounded-2xl overflow-hidden flex flex-col hover:border-blue-500/20 transition-all">
-                    <div className="w-full h-32 bg-white/5 relative">
-                      {course.thumbnailUrl && <img src={course.thumbnailUrl} className="w-full h-full object-cover" />}
-                      <span className="absolute top-2 left-2 text-[9px] bg-white/10 px-2 py-0.5 rounded-full text-slate-300 font-semibold border border-white/10">
-                        {course.difficulty}
-                      </span>
-                    </div>
-                    <div className="p-4 flex flex-col flex-1">
-                      <h4 className="text-white font-semibold text-sm line-clamp-1">{course.title}</h4>
-                      <p className="text-slate-500 text-xs line-clamp-2 mt-1 mb-4">{course.description}</p>
-                      
-                      <div className="mt-auto flex gap-2">
-                        <button
-                          onClick={() => handleSelectCourse(course)}
-                          className="btn-primary text-xs py-2 px-3 flex-1 flex items-center justify-center gap-1"
-                        >
-                          Manage Modules <ChevronRight size={12} />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setCourseForm(course);
-                            setShowCourseModal(true);
-                          }}
-                          className="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white border border-white/5"
-                        >
-                          <Edit2 size={12} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteCourse(course.id)}
-                          className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/25 border border-red-500/10"
-                        >
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* TAB 2: MODULES LIST */}
-        {activeTab === 'modules' && selectedCourse && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <button onClick={() => setActiveTab('courses')} className="text-xs text-blue-400 hover:underline">← Back to Course Selection</button>
-                <h3 className="text-white font-bold text-base mt-1">Modules in "{selectedCourse.title}"</h3>
-              </div>
+        {/* STEP 2: MODULES FOR SELECTED CAREER */}
+        {selectedGoal && (
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                2. Modules for <span className="text-blue-400">{selectedGoal.name}</span>
+              </h2>
               <button
-                onClick={() => {
-                  setModuleForm({ id: null, title: '', description: '', moduleOrder: modules.length + 1 });
-                  setShowModuleModal(true);
-                }}
-                className="btn-primary flex items-center gap-1 text-xs py-2 px-4"
+                onClick={() => { setModuleForm({ id: null, name: '', description: '', moduleOrder: modules.length + 1 }); setShowModuleModal(true); }}
+                className="btn-primary text-xs flex items-center gap-1.5 py-2 px-3"
               >
                 <Plus size={14} /> Add Module
               </button>
             </div>
 
-            {modules.length === 0 ? (
-              <div className="glass p-12 text-center rounded-2xl">
-                <p className="text-slate-500">No modules added to this course yet. Get started by adding a module!</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {modules.map((mod, i) => (
-                  <div key={mod.id} className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-all">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {modules.map(mod => (
+                <div
+                  key={mod.id}
+                  onClick={() => handleSelectModule(mod)}
+                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    selectedModule?.id === mod.id
+                      ? 'bg-purple-500/20 border-purple-500 text-white'
+                      : 'glass text-slate-300 hover:border-purple-500/40'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
                     <div>
-                      <span className="text-[10px] text-blue-400 font-semibold tracking-wide uppercase font-mono">Module {mod.moduleOrder || i + 1}</span>
-                      <h4 className="text-white font-semibold text-sm mt-0.5">{mod.title}</h4>
-                      {mod.description && <p className="text-slate-500 text-xs mt-0.5">{mod.description}</p>}
+                      <span className="text-[10px] text-purple-400 font-bold uppercase">Module {mod.moduleOrder}</span>
+                      <h4 className="font-bold text-sm text-white">{mod.name}</h4>
                     </div>
-
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleSelectModule(mod)}
-                        className="btn-primary text-xs py-2 px-3 flex items-center gap-1"
-                      >
-                        Manage Content <ChevronRight size={12} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setModuleForm(mod);
-                          setShowModuleModal(true);
-                        }}
-                        className="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white border border-white/5"
-                      >
-                        <Edit2 size={12} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteModule(mod.id)}
-                        className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/25 border border-red-500/10"
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                    <div className="flex items-center gap-1">
+                      <button onClick={(e) => { e.stopPropagation(); setModuleForm(mod); setShowModuleModal(true); }} className="p-1 text-slate-400 hover:text-blue-400"><Edit2 size={12} /></button>
+                      <button onClick={(e) => { e.stopPropagation(); handleDeleteModule(mod.id); }} className="p-1 text-slate-400 hover:text-red-400"><Trash2 size={12} /></button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         )}
 
-        {/* TAB 3: CONTENT MANAGEMENT */}
-        {activeTab === 'content' && selectedModule && (
-          <div className="space-y-6">
-            <div>
-              <button onClick={() => setActiveTab('modules')} className="text-xs text-blue-400 hover:underline">← Back to Modules</button>
-              <h3 className="text-white font-bold text-base mt-1">Content Manager — {selectedModule.title}</h3>
+        {/* STEP 3: LESSONS FOR SELECTED MODULE */}
+        {selectedModule && (
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                3. Lessons for <span className="text-purple-400">{selectedModule.name}</span>
+              </h2>
+              <button
+                onClick={() => { setLessonForm({ id: null, name: '', description: '', lessonOrder: lessons.length + 1 }); setShowLessonModal(true); }}
+                className="btn-primary text-xs flex items-center gap-1.5 py-2 px-3"
+              >
+                <Plus size={14} /> Add Lesson
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              {lessons.map(l => (
+                <div
+                  key={l.id}
+                  onClick={() => handleSelectLesson(l)}
+                  className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    selectedLesson?.id === l.id
+                      ? 'bg-emerald-500/20 border-emerald-500 text-white'
+                      : 'glass text-slate-300 hover:border-emerald-500/40'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] text-emerald-400 font-bold">Lesson {l.lessonOrder}</span>
+                    <div className="flex items-center gap-1">
+                      <button onClick={(e) => { e.stopPropagation(); setLessonForm(l); setShowLessonModal(true); }} className="p-1 text-slate-400 hover:text-blue-400"><Edit2 size={12} /></button>
+                      <button onClick={(e) => { e.stopPropagation(); handleDeleteLesson(l.id); }} className="p-1 text-slate-400 hover:text-red-400"><Trash2 size={12} /></button>
+                    </div>
+                  </div>
+                  <h5 className="font-semibold text-xs text-white">{l.name}</h5>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* STEP 4: CONTENT MANAGEMENT (NOTES, YOUTUBE, QUIZ) */}
+        {selectedLesson && (
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="glass p-6 rounded-2xl space-y-6 border border-emerald-500/30">
+            <div className="border-b border-white/10 pb-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-display font-bold text-lg text-white">
+                  Content for: <span className="text-emerald-400">{selectedLesson.name}</span>
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Strictly attached to {selectedGoal.name} → {selectedModule.name} → {selectedLesson.name}
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-              {/* 1. VIDEOS SECTION */}
-              <div className="glass p-5 rounded-2xl space-y-4">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-white font-semibold text-sm flex items-center gap-1.5">
-                    <Play size={14} className="text-blue-400" /> Videos ({videos.length})
+              {/* NOTES / CONTENT */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-300 uppercase flex items-center gap-1.5">
+                    <FileText size={14} className="text-blue-400" /> Lesson Notes ({notes.length})
                   </h4>
-                  <button
-                    onClick={() => {
-                      setVideoForm({ title: '', youtubeUrl: '', durationMinutes: 10, orderNo: videos.length + 1 });
-                      setShowVideoModal(true);
-                    }}
-                    className="p-1 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded border border-blue-500/10"
-                  >
-                    <Plus size={14} />
+                  <button onClick={() => { setNoteForm({ id: null, title: '', content: '' }); setShowNoteModal(true); }} className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+                    <Plus size={12} /> Add Notes
                   </button>
                 </div>
 
-                <div className="space-y-2">
-                  {videos.length === 0 ? (
-                    <p className="text-xs text-slate-600">No videos uploaded.</p>
-                  ) : (
-                    videos.map(v => (
-                      <div key={v.id} className="p-3 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-xs">
-                        <div className="min-w-0 pr-2">
-                          <p className="text-white font-medium truncate">{v.title}</p>
-                          <p className="text-slate-600 truncate text-[10px]">{v.youtubeUrl}</p>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteVideo(v.id)}
-                          className="text-red-400 hover:text-red-500 p-1 flex-shrink-0"
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                {notes.map(n => (
+                  <div key={n.id} className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-xs text-white">{n.title}</span>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => { setNoteForm(n); setShowNoteModal(true); }} className="text-slate-400 hover:text-blue-400"><Edit2 size={12} /></button>
+                        <button onClick={() => handleDeleteNote(n.id)} className="text-slate-400 hover:text-red-400"><Trash2 size={12} /></button>
                       </div>
-                    ))
-                  )}
-                </div>
+                    </div>
+                    <p className="text-[11px] text-slate-400 line-clamp-3 font-sans whitespace-pre-wrap">{n.content}</p>
+                  </div>
+                ))}
               </div>
 
-              {/* 2. NOTES SECTION */}
-              <div className="glass p-5 rounded-2xl space-y-4">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-white font-semibold text-sm flex items-center gap-1.5">
-                    <FileText size={14} className="text-purple-400" /> Notes ({notes.length})
+              {/* YOUTUBE VIDEOS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-300 uppercase flex items-center gap-1.5">
+                    <Play size={14} className="text-red-400" /> YouTube Videos ({videos.length})
                   </h4>
-                  <button
-                    onClick={() => {
-                      setNoteForm({ title: '', pdfUrl: '' });
-                      setShowNoteModal(true);
-                    }}
-                    className="p-1 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 rounded border border-purple-500/10"
-                  >
-                    <Plus size={14} />
+                  <button onClick={() => { setVideoForm({ id: null, title: '', youtubeUrl: '', durationMinutes: 15, orderNo: videos.length + 1 }); setShowVideoModal(true); }} className="text-xs text-red-400 hover:underline flex items-center gap-1">
+                    <Plus size={12} /> Add Video
                   </button>
                 </div>
 
-                <div className="space-y-2">
-                  {notes.length === 0 ? (
-                    <p className="text-xs text-slate-600">No notes uploaded.</p>
-                  ) : (
-                    notes.map(n => (
-                      <div key={n.id} className="p-3 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-xs">
-                        <div className="min-w-0 pr-2">
-                          <p className="text-white font-medium truncate">{n.title}</p>
-                          <a href={n.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline truncate text-[10px] block">
-                            View PDF Link
-                          </a>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteNote(n.id)}
-                          className="text-red-400 hover:text-red-500 p-1 flex-shrink-0"
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                {videos.map(v => (
+                  <div key={v.id} className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-xs text-white">{v.title}</span>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => { setVideoForm(v); setShowVideoModal(true); }} className="text-slate-400 hover:text-blue-400"><Edit2 size={12} /></button>
+                        <button onClick={() => handleDeleteVideo(v.id)} className="text-slate-400 hover:text-red-400"><Trash2 size={12} /></button>
                       </div>
-                    ))
-                  )}
-                </div>
+                    </div>
+                    <a href={v.youtubeUrl} target="_blank" rel="noreferrer" className="text-[10px] text-red-400 hover:underline truncate block">
+                      {v.youtubeUrl}
+                    </a>
+                  </div>
+                ))}
               </div>
 
-              {/* 3. QUIZ QUESTIONS SECTION */}
-              <div className="glass p-5 rounded-2xl space-y-4">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-white font-semibold text-sm flex items-center gap-1.5">
-                    <Brain size={14} className="text-emerald-400" /> Quiz Questions ({quizzes.length})
+              {/* QUIZZES */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-300 uppercase flex items-center gap-1.5">
+                    <Brain size={14} className="text-purple-400" /> Quizzes ({quizzes.length})
                   </h4>
-                  <button
-                    onClick={() => {
-                      setQuizForm({ question: '', option1: '', option2: '', option3: '', option4: '', correctAnswer: 1, explanation: '' });
-                      setShowQuizModal(true);
-                    }}
-                    className="p-1 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 rounded border border-emerald-500/10"
-                  >
-                    <Plus size={14} />
+                  <button onClick={() => { setQuizForm({ id: null, question: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', explanation: '' }); setShowQuizModal(true); }} className="text-xs text-purple-400 hover:underline flex items-center gap-1">
+                    <Plus size={12} /> Add Quiz Question
                   </button>
                 </div>
 
-                <div className="space-y-2">
-                  {quizzes.length === 0 ? (
-                    <p className="text-xs text-slate-600">No quiz questions added.</p>
-                  ) : (
-                    quizzes.map((q, idx) => (
-                      <div key={q.id} className="p-3 rounded-xl bg-white/5 border border-white/5 flex items-start justify-between text-xs">
-                        <div className="min-w-0 pr-2">
-                          <span className="text-[10px] text-emerald-400 font-semibold uppercase">Q{idx + 1}</span>
-                          <p className="text-white font-medium line-clamp-2 mt-0.5">{q.question}</p>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteQuiz(q.id)}
-                          className="text-red-400 hover:text-red-500 p-1 flex-shrink-0 mt-0.5"
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                {quizzes.map(q => (
+                  <div key={q.id} className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-xs text-white line-clamp-1">{q.question}</span>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => { setQuizForm(q); setShowQuizModal(true); }} className="text-slate-400 hover:text-blue-400"><Edit2 size={12} /></button>
+                        <button onClick={() => handleDeleteQuiz(q.id)} className="text-slate-400 hover:text-red-400"><Trash2 size={12} /></button>
                       </div>
-                    ))
-                  )}
-                </div>
+                    </div>
+                    <span className="text-[10px] text-emerald-400 font-bold">Ans: Option {q.correctAnswer}</span>
+                  </div>
+                ))}
               </div>
 
             </div>
-          </div>
+          </motion.div>
         )}
 
       </div>
 
-      {/* ── MODAL: COURSE ────────────────────────────────────────────────── */}
-      {showCourseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass w-full max-w-lg p-6 rounded-2xl space-y-4 relative">
-            <button onClick={() => setShowCourseModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={18} /></button>
-            <h3 className="text-white font-bold text-lg">{courseForm.id ? 'Edit Course' : 'Create New Course'}</h3>
-            <form onSubmit={handleSaveCourse} className="space-y-3 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-400">Course Title *</label>
-                  <input required type="text" value={courseForm.title} onChange={e => setCourseForm({...courseForm, title: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Java Programming" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Category *</label>
-                  <input required type="text" value={courseForm.category} onChange={e => setCourseForm({...courseForm, category: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Programming, Web Dev" />
-                </div>
-              </div>
-              <div>
-                <label className="text-slate-400">Description</label>
-                <textarea rows={3} value={courseForm.description} onChange={e => setCourseForm({...courseForm, description: e.target.value})} className="input-field mt-1 py-2" placeholder="Describe the course goals..." />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="text-slate-400">Difficulty</label>
-                  <select value={courseForm.difficulty} onChange={e => setCourseForm({...courseForm, difficulty: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-slate-400">Instructor</label>
-                  <input type="text" value={courseForm.instructor} onChange={e => setCourseForm({...courseForm, instructor: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. John Doe" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Duration (Hours)</label>
-                  <input type="number" value={courseForm.durationHours} onChange={e => setCourseForm({...courseForm, durationHours: e.target.value ? Number(e.target.value) : ''})} className="input-field mt-1 py-2" placeholder="e.g. 24" />
-                </div>
-              </div>
-              <div>
-                <label className="text-slate-400">Thumbnail URL</label>
-                <input type="text" value={courseForm.thumbnailUrl} onChange={e => setCourseForm({...courseForm, thumbnailUrl: e.target.value})} className="input-field mt-1 py-2" placeholder="https://images.unsplash.com/... or cloud URL" />
-              </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl text-sm font-semibold">Save Course</button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── MODAL: MODULE ────────────────────────────────────────────────── */}
-      {showModuleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass w-full max-w-md p-6 rounded-2xl space-y-4 relative">
-            <button onClick={() => setShowModuleModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={18} /></button>
-            <h3 className="text-white font-bold text-base">{moduleForm.id ? 'Edit Module' : 'Create New Module'}</h3>
-            <form onSubmit={handleSaveModule} className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-400">Module Title *</label>
-                <input required type="text" value={moduleForm.title} onChange={e => setModuleForm({...moduleForm, title: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Variables & Data Types" />
-              </div>
-              <div>
-                <label className="text-slate-400">Description</label>
-                <textarea rows={2} value={moduleForm.description} onChange={e => setModuleForm({...moduleForm, description: e.target.value})} className="input-field mt-1 py-2" placeholder="What is taught in this module..." />
-              </div>
-              <div>
-                <label className="text-slate-400">Module Order (1, 2, 3...)</label>
-                <input required type="number" value={moduleForm.moduleOrder} onChange={e => setModuleForm({...moduleForm, moduleOrder: Number(e.target.value)})} className="input-field mt-1 py-2" />
-              </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Save Module</button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── MODAL: VIDEO ─────────────────────────────────────────────────── */}
-      {showVideoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass w-full max-w-md p-6 rounded-2xl space-y-4 relative">
-            <button onClick={() => setShowVideoModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={18} /></button>
-            <h3 className="text-white font-bold text-base">Add Video to Module</h3>
-            <form onSubmit={handleSaveVideo} className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-400">Video Title *</label>
-                <input required type="text" value={videoForm.title} onChange={e => setVideoForm({...videoForm, title: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Introduction to Variables" />
-              </div>
-              <div>
-                <label className="text-slate-400">YouTube URL *</label>
-                <input required type="text" value={videoForm.youtubeUrl} onChange={e => setVideoForm({...videoForm, youtubeUrl: e.target.value})} className="input-field mt-1 py-2" placeholder="https://www.youtube.com/watch?v=..." />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-400">Duration (Minutes)</label>
-                  <input type="number" value={videoForm.durationMinutes} onChange={e => setVideoForm({...videoForm, durationMinutes: Number(e.target.value)})} className="input-field mt-1 py-2" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Order No</label>
-                  <input type="number" value={videoForm.orderNo} onChange={e => setVideoForm({...videoForm, orderNo: Number(e.target.value)})} className="input-field mt-1 py-2" />
-                </div>
-              </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Add Video</button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── MODAL: NOTE ──────────────────────────────────────────────────── */}
+      {/* MODAL: NOTES */}
       {showNoteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass w-full max-w-md p-6 rounded-2xl space-y-4 relative">
-            <button onClick={() => setShowNoteModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={18} /></button>
-            <h3 className="text-white font-bold text-base">Add Notes PDF Link</h3>
-            <form onSubmit={handleSaveNote} className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-400">Notes Title *</label>
-                <input required type="text" value={noteForm.title} onChange={e => setNoteForm({...noteForm, title: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Week 1 Reference Manual" />
-              </div>
-              <div>
-                <label className="text-slate-400">PDF URL *</label>
-                <input required type="text" value={noteForm.pdfUrl} onChange={e => setNoteForm({...noteForm, pdfUrl: e.target.value})} className="input-field mt-1 py-2" placeholder="https://res.cloudinary.com/... or AWS S3 URL" />
-              </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Add Note</button>
-            </form>
-          </motion.div>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass p-6 rounded-2xl max-w-lg w-full space-y-4">
+            <h3 className="text-white font-bold">{noteForm.id ? 'Edit Notes' : 'Add Lesson Notes'}</h3>
+            <input className="input-field" placeholder="Notes Title" value={noteForm.title} onChange={e => setNoteForm(f => ({ ...f, title: e.target.value }))} />
+            <textarea className="input-field h-32" placeholder="Write lesson study notes / explanation..." value={noteForm.content} onChange={e => setNoteForm(f => ({ ...f, content: e.target.value }))} />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setShowNoteModal(false)} className="btn-secondary text-xs">Cancel</button>
+              <button onClick={handleSaveNote} className="btn-primary text-xs">Save Notes</button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* ── MODAL: QUIZ ──────────────────────────────────────────────────── */}
+      {/* MODAL: VIDEO */}
+      {showVideoModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass p-6 rounded-2xl max-w-lg w-full space-y-4">
+            <h3 className="text-white font-bold">{videoForm.id ? 'Edit Video' : 'Add YouTube Video Link'}</h3>
+            <input className="input-field" placeholder="Video Title" value={videoForm.title} onChange={e => setVideoForm(f => ({ ...f, title: e.target.value }))} />
+            <input className="input-field" placeholder="YouTube URL (https://www.youtube.com/...)" value={videoForm.youtubeUrl} onChange={e => setVideoForm(f => ({ ...f, youtubeUrl: e.target.value }))} />
+            <div className="grid grid-cols-2 gap-2">
+              <input type="number" className="input-field" placeholder="Duration (mins)" value={videoForm.durationMinutes} onChange={e => setVideoForm(f => ({ ...f, durationMinutes: parseInt(e.target.value) || 0 }))} />
+              <input type="number" className="input-field" placeholder="Order No" value={videoForm.orderNo} onChange={e => setVideoForm(f => ({ ...f, orderNo: parseInt(e.target.value) || 1 }))} />
+            </div>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setShowVideoModal(false)} className="btn-secondary text-xs">Cancel</button>
+              <button onClick={handleSaveVideo} className="btn-primary text-xs">Save Video</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: QUIZ */}
       {showQuizModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass w-full max-w-lg p-6 rounded-2xl space-y-4 relative">
-            <button onClick={() => setShowQuizModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={18} /></button>
-            <h3 className="text-white font-bold text-base">Add Quiz Question</h3>
-            <form onSubmit={handleSaveQuiz} className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-400">Question *</label>
-                <textarea required rows={2} value={quizForm.question} onChange={e => setQuizForm({...quizForm, question: e.target.value})} className="input-field mt-1 py-2" placeholder="What is the default value of..." />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-400">Option 1 *</label>
-                  <input required type="text" value={quizForm.option1} onChange={e => setQuizForm({...quizForm, option1: e.target.value})} className="input-field mt-1 py-2" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Option 2 *</label>
-                  <input required type="text" value={quizForm.option2} onChange={e => setQuizForm({...quizForm, option2: e.target.value})} className="input-field mt-1 py-2" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Option 3 *</label>
-                  <input required type="text" value={quizForm.option3} onChange={e => setQuizForm({...quizForm, option3: e.target.value})} className="input-field mt-1 py-2" />
-                </div>
-                <div>
-                  <label className="text-slate-400">Option 4 *</label>
-                  <input required type="text" value={quizForm.option4} onChange={e => setQuizForm({...quizForm, option4: e.target.value})} className="input-field mt-1 py-2" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-400">Correct Answer Option (1-4) *</label>
-                  <select value={quizForm.correctAnswer} onChange={e => setQuizForm({...quizForm, correctAnswer: Number(e.target.value)})} className="input-field mt-1 py-2 bg-[#090F1E]">
-                    <option value={1}>Option 1</option>
-                    <option value={2}>Option 2</option>
-                    <option value={3}>Option 3</option>
-                    <option value={4}>Option 4</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-slate-400">Explanation</label>
-                  <input type="text" value={quizForm.explanation || ''} onChange={e => setQuizForm({...quizForm, explanation: e.target.value})} className="input-field mt-1 py-2" placeholder="e.g. Because primitive types..." />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="text-slate-400">Topic</label>
-                  <select value={quizForm.topic || 'Core Java'} onChange={e => setQuizForm({...quizForm, topic: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
-                    <option value="Core Java">Core Java</option>
-                    <option value="OOP">OOP</option>
-                    <option value="Exceptions">Exceptions</option>
-                    <option value="Collections">Collections</option>
-                    <option value="Concurrency">Concurrency</option>
-                    <option value="JVM">JVM</option>
-                    <option value="Modern Java">Modern Java</option>
-                    <option value="Spring Boot">Spring Boot</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-slate-400">Difficulty</label>
-                  <select value={quizForm.difficulty || 'Easy'} onChange={e => setQuizForm({...quizForm, difficulty: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
-                    <option value="Easy">🟢 Easy</option>
-                    <option value="Medium">🟡 Medium</option>
-                    <option value="Hard">🔴 Hard</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-slate-400">Company Tag</label>
-                  <select value={quizForm.company || 'General'} onChange={e => setQuizForm({...quizForm, company: e.target.value})} className="input-field mt-1 py-2 bg-[#090F1E]">
-                    <option value="General">General</option>
-                    <option value="Zoho">Zoho</option>
-                    <option value="TCS">TCS</option>
-                    <option value="Infosys">Infosys</option>
-                    <option value="Amazon">Amazon</option>
-                    <option value="Wipro">Wipro</option>
-                    <option value="Freshworks">Freshworks</option>
-                  </select>
-                </div>
-              </div>
-              <button type="submit" className="btn-primary w-full py-2.5 mt-2 rounded-xl font-semibold">Save Question</button>
-            </form>
-          </motion.div>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto max-h-screen">
+          <div className="glass p-6 rounded-2xl max-w-lg w-full space-y-3 my-8">
+            <h3 className="text-white font-bold">{quizForm.id ? 'Edit Quiz Question' : 'Add Quiz Question'}</h3>
+            <textarea className="input-field h-20" placeholder="Question Text" value={quizForm.question} onChange={e => setQuizForm(f => ({ ...f, question: e.target.value }))} />
+            <input className="input-field" placeholder="Option A" value={quizForm.optionA} onChange={e => setQuizForm(f => ({ ...f, optionA: e.target.value }))} />
+            <input className="input-field" placeholder="Option B" value={quizForm.optionB} onChange={e => setQuizForm(f => ({ ...f, optionB: e.target.value }))} />
+            <input className="input-field" placeholder="Option C" value={quizForm.optionC} onChange={e => setQuizForm(f => ({ ...f, optionC: e.target.value }))} />
+            <input className="input-field" placeholder="Option D" value={quizForm.optionD} onChange={e => setQuizForm(f => ({ ...f, optionD: e.target.value }))} />
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Correct Option</label>
+              <select className="input-field" value={quizForm.correctAnswer} onChange={e => setQuizForm(f => ({ ...f, correctAnswer: e.target.value }))}>
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+                <option value="C">Option C</option>
+                <option value="D">Option D</option>
+              </select>
+            </div>
+            <textarea className="input-field h-16" placeholder="Explanation" value={quizForm.explanation} onChange={e => setQuizForm(f => ({ ...f, explanation: e.target.value }))} />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setShowQuizModal(false)} className="btn-secondary text-xs">Cancel</button>
+              <button onClick={handleSaveQuiz} className="btn-primary text-xs">Save Question</button>
+            </div>
+          </div>
         </div>
       )}
 

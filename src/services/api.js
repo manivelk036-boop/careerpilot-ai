@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://careerpilot-ai-production-6050.up.railway.app/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -34,6 +34,12 @@ api.interceptors.response.use(
 // ── Auth ──────────────────────────────────────────────────
 export const authLogin  = (data) => api.post('/api/auth/login', data);
 export const authRegister = (data) => api.post('/api/auth/register', data);
+
+// ── Career Goals & Hierarchy ──────────────────────────────
+export const getCareerGoals       = () => api.get('/career-goals');
+export const getCareerGoalModules = (goalId) => api.get(`/career-goals/${goalId}/modules`);
+export const getModuleLessons     = (moduleId) => api.get(`/modules/${moduleId}/lessons`);
+export const getLessonQuizzes     = (lessonId) => api.get(`/lessons/${lessonId}/quizzes`);
 
 // ── Courses ───────────────────────────────────────────────
 export const getCourses       = () => api.get('/courses');
@@ -84,5 +90,34 @@ export const adminDeleteNote  = (id) => api.delete(`/admin/note/${id}`);
 export const adminGetQuiz    = (moduleId) => api.get(`/admin/quiz/${moduleId}`);
 export const adminCreateQuiz = (data) => api.post('/admin/quiz', data);
 export const adminDeleteQuiz = (id) => api.delete(`/admin/quiz/${id}`);
+
+// ── Career-Specific LMS (Strict Hierarchy) ──────────────
+export const getCareerLmsGoals = () => api.get('/career-goals');
+export const getCareerLmsModules = (goalId) => api.get(`/career-goals/${goalId}/modules`);
+export const getCareerLmsLessons = (goalId, moduleId) => api.get(`/career-goals/${goalId}/modules/${moduleId}/lessons`);
+export const getCareerLmsNotes = (goalId, moduleId, lessonId) => api.get(`/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/notes`);
+export const getCareerLmsVideos = (goalId, moduleId, lessonId) => api.get(`/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/videos`);
+export const getCareerLmsQuizzes = (goalId, moduleId, lessonId) => api.get(`/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/quizzes`);
+
+// Admin Career-Specific LMS CRUD
+export const adminCreateCareerModule = (goalId, data) => api.post(`/admin/lms/career-goals/${goalId}/modules`, data);
+export const adminUpdateCareerModule = (goalId, moduleId, data) => api.put(`/admin/lms/career-goals/${goalId}/modules/${moduleId}`, data);
+export const adminDeleteCareerModule = (goalId, moduleId) => api.delete(`/admin/lms/career-goals/${goalId}/modules/${moduleId}`);
+
+export const adminCreateCareerLesson = (goalId, moduleId, data) => api.post(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons`, data);
+export const adminUpdateCareerLesson = (goalId, moduleId, lessonId, data) => api.put(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}`, data);
+export const adminDeleteCareerLesson = (goalId, moduleId, lessonId) => api.delete(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}`);
+
+export const adminCreateCareerNotes = (goalId, moduleId, lessonId, data) => api.post(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/notes`, data);
+export const adminUpdateCareerNotes = (goalId, moduleId, lessonId, noteId, data) => api.put(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/notes/${noteId}`, data);
+export const adminDeleteCareerNotes = (goalId, moduleId, lessonId, noteId) => api.delete(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/notes/${noteId}`);
+
+export const adminCreateCareerVideo = (goalId, moduleId, lessonId, data) => api.post(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/videos`, data);
+export const adminUpdateCareerVideo = (goalId, moduleId, lessonId, videoId, data) => api.put(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/videos/${videoId}`, data);
+export const adminDeleteCareerVideo = (goalId, moduleId, lessonId, videoId) => api.delete(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/videos/${videoId}`);
+
+export const adminCreateCareerQuiz = (goalId, moduleId, lessonId, data) => api.post(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/quizzes`, data);
+export const adminUpdateCareerQuiz = (goalId, moduleId, lessonId, quizId, data) => api.put(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/quizzes/${quizId}`, data);
+export const adminDeleteCareerQuiz = (goalId, moduleId, lessonId, quizId) => api.delete(`/admin/lms/career-goals/${goalId}/modules/${moduleId}/lessons/${lessonId}/quizzes/${quizId}`);
 
 export default api;

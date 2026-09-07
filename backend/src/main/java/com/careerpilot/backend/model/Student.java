@@ -21,6 +21,9 @@ public class Student {
 
     private String password;
 
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
+
     private String college;
     private String department;
     @Column(name = "academic_year")
@@ -205,4 +208,7 @@ public class Student {
 
     public List<Boolean> getStudyStreak() { return studyStreak; }
     public void setStudyStreak(List<Boolean> studyStreak) { this.studyStreak = studyStreak; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
